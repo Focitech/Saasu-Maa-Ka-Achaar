@@ -972,24 +972,50 @@ body {
   }
 }
 
-@media (max-width: 768px) {
-  .phone-badge-nav {
-    display: none;
+@media (max-width: 860px) {
+  .desktop-nav-btn {
+    display: none !important;
   }
-  .brand-text span {
-    display: none;
+  .phone-badge-nav {
+    display: none !important;
   }
 }
 
 @media (max-width: 600px) {
-  .hero-title {
-    font-size: 2rem;
+  .container {
+    padding: 0 14px;
   }
-  .hero-title span {
-    font-size: 1.45rem;
+  .brand-text span {
+    display: none !important;
   }
   .brand-text h1 {
     font-size: 1.05rem;
+    white-space: nowrap;
+  }
+  .brand-logo-img {
+    width: 36px;
+    height: 36px;
+  }
+  .cart-label {
+    display: none !important;
+  }
+  .cart-btn {
+    padding: 6px 10px;
+    gap: 4px;
+  }
+  .mobile-toggle {
+    padding: 5px 8px;
+    font-size: 1.1rem;
+  }
+  .nav-inner {
+    padding: 6px 0;
+    gap: 8px;
+  }
+  .hero-title {
+    font-size: 1.85rem;
+  }
+  .hero-title span {
+    font-size: 1.35rem;
   }
   .features-grid {
     grid-template-columns: 1fr;
@@ -1008,6 +1034,12 @@ body {
     padding: 12px;
     border-radius: 50%;
   }
+  .top-announcement-bar {
+    font-size: 0.74rem;
+    padding: 6px 10px;
+    line-height: 1.35;
+  }
 }
+
 
 

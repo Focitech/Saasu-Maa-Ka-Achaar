@@ -15,7 +15,7 @@
 - Initialized Next.js setup with JavaScript and Vanilla CSS.
 - Implemented responsive landing page, branding showcase, product catalog, and checkout modal.
 - Configured backend API endpoints for product retrieval and order placement.
-- Refactored navbar to compact height (52px), single-line centered links, and added responsive mobile toggle drawer.
+- Fixed mobile navbar overflow: Hid redundant desktop order button on screens <= 860px, streamlined basket to icon/badge on mobile, and moved all primary CTAs into the mobile drawer.
 - Integrated official brand details: 100% Mustard Oil, No Preservatives, Maa ke haath ka swaad, and direct booking via 8979319003.
 - Removed unwanted hero badge pill from top of hero banner.
 - Configured dual-tier Supabase architecture (`anon` for user, `service_role` for admin) with SQL schema & RLS policies in `supabase/schema.sql`.

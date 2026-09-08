@@ -240,10 +240,11 @@ export default function Home() {
               onClick={() => setIsCartOpen(true)}
               aria-label="View basket"
             >
-              <span>🛒 Basket</span>
+              <span className="cart-icon">🛒</span>
+              <span className="cart-label">Basket</span>
               {totalItemsCount > 0 && <span className="cart-badge">{totalItemsCount}</span>}
             </button>
-            <a href="#varieties" className="primary-btn">
+            <a href="#varieties" className="primary-btn desktop-nav-btn">
               Order Online
             </a>
             <button
@@ -259,10 +260,10 @@ export default function Home() {
         {/* Mobile Menu Dropdown */}
         {isMobileMenuOpen && (
           <div className="mobile-menu open">
-            <a href="#varieties" onClick={() => setIsMobileMenuOpen(false)}>Our Varieties</a>
-            <a href="#heritage" onClick={() => setIsMobileMenuOpen(false)}>Heritage & Story</a>
-            <a href="#why-us" onClick={() => setIsMobileMenuOpen(false)}>Why Choose Us</a>
-            <a href="#contact" onClick={() => setIsMobileMenuOpen(false)}>Contact</a>
+            <a href="#varieties" onClick={() => setIsMobileMenuOpen(false)}>🌶️ Explore All Varieties</a>
+            <a href="#heritage" onClick={() => setIsMobileMenuOpen(false)}>📖 Heritage & Story</a>
+            <a href="#why-us" onClick={() => setIsMobileMenuOpen(false)}>✨ Why Choose Us</a>
+            <a href="#contact" onClick={() => setIsMobileMenuOpen(false)}>📍 Contact Us</a>
             <div className="mobile-actions-row">
               <a href="tel:8979319003" className="secondary-btn" style={{ flex: 1, justifyContent: 'center' }}>
                 📞 8979319003
