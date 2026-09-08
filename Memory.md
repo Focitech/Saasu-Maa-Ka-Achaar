@@ -6,7 +6,7 @@
 - Backend: Next.js Route Handlers (`/api/products`, `/api/orders`)
 - Contact & Booking: `8979319003` (Phone & WhatsApp)
 - Assets: Authentic Saasu Maa Ka Achaar branding assets (`/images/logo.jpg`, `/images/billboard.png`, `/images/poster.png`, `/images/real-jars.png`)
-- Repository: `https://github.com/Focitech/-.git` (main branch)
+- Repository: `https://github.com/Focitech/Saasu-Maa-Ka-Achaar.git` (main branch)
 
 ## Key Milestones
 - Initialized Next.js setup with JavaScript and Vanilla CSS.
@@ -15,4 +15,4 @@
 - Refactored navbar to compact height (52px), single-line centered links, and added responsive mobile toggle drawer.
 - Integrated official brand details: 100% Mustard Oil, No Preservatives, Maa ke haath ka swaad, and direct booking via 8979319003.
 - Added suppressHydrationWarning to eliminate browser extension mismatch warnings.
-- Pushed complete codebase and assets to GitHub repository `https://github.com/Focitech/-.git`.
+- Pushed complete codebase and assets to GitHub repository `https://github.com/Focitech/Saasu-Maa-Ka-Achaar.git`.
