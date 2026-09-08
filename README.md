@@ -11,17 +11,18 @@ Official website and ordering system for **Saasu Maa's Food** — homemade tradi
 - **Direct Ordering Channels**:
   - One-click WhatsApp order generation (+91 8979319003) with pre-filled itemized breakdown.
   - Direct telephone booking badge.
-  - Delivery inquiry form connected to the backend API.
+  - Delivery inquiry form connected to the backend API and database.
 - **Floating Contact Actions**: Always-accessible WhatsApp and direct phone call buttons.
-- **Backend API Routes**:
-  - `GET /api/products`: Fetches full product catalog and metadata.
-  - `POST /api/orders`: Submits customer orders and inquiry requests.
+- **Dual-Tier Supabase Integration**:
+  - **User Client (`anon`)**: Safe for browser and client queries with Row Level Security (RLS).
+  - **Admin Client (`service_role`)**: Strictly server-side elevated access for backend workflows and orders.
 
 ---
 
 ## Tech Stack
 
 - **Framework**: Next.js (App Router)
+- **Database**: [Supabase](https://supabase.com/) (PostgreSQL with RLS)
 - **Frontend**: React (JavaScript), Vanilla CSS, HTML5
 - **Backend**: Next.js Server Route Handlers
 - **Package Manager**: npm
@@ -32,18 +33,40 @@ Official website and ordering system for **Saasu Maa's Food** — homemade tradi
 
 ```
 ├── public/
-│   └── images/            # Brand logo and billboard graphics
+│   └── images/              # Brand logo and billboard graphics
 ├── src/
-│   └── app/
-│       ├── api/
-│       │   ├── orders/     # Backend route for order processing
-│       │   └── products/   # Backend route for product catalog
-│       ├── globals.css     # Design tokens and responsive styles
-│       ├── layout.js       # App root layout & SEO metadata
-│       └── page.js         # Landing page & store logic
+│   ├── app/
+│   │   ├── api/
+│   │   │   ├── orders/       # Backend route for order processing
+│   │   │   └── products/     # Backend route for product catalog
+│   │   ├── globals.css       # Design tokens and responsive styles
+│   │   ├── layout.js         # App root layout & SEO metadata
+│   │   └── page.js           # Landing page & store logic
+│   └── lib/
+│       └── supabase/         # Supabase client (anon) & admin (service_role)
+├── supabase/
+│   └── schema.sql            # PostgreSQL schema & RLS policies
+├── .env.example
 ├── package.json
-└── test-endpoints.mjs      # Endpoint verification script
+└── test-endpoints.mjs        # Endpoint verification script
 ```
+
+---
+
+## Environment Variables
+
+Copy `.env.example` to `.env.local` and provide your project keys:
+
+```bash
+# Public Client (Safe for browser)
+NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+
+# Admin Client (Server-side only)
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+```
+
+To initialize your Supabase tables, run `supabase/schema.sql` in the Supabase SQL Editor.
 
 ---
 
@@ -73,14 +96,6 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 ```bash
 npm run build
 npm run start
-```
-
-### Verification Script
-
-Run the automated endpoint test suite:
-
-```bash
-node test-endpoints.mjs
 ```
 
 ---

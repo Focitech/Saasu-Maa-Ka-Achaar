@@ -286,7 +286,6 @@ export default function Home() {
         <section className="hero">
           <div className="container hero-grid">
             <div className="hero-content">
-              <div className="hero-badge">✨ 100% Homemade • Sun-Matured</div>
               <h1 className="hero-title">
                 सासू माँ का अचार
                 <span>Homemade Goodness, Crafted with Love</span>

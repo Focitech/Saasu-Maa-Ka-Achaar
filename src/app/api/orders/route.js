@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { getSupabaseAdmin } from '@/lib/supabase';
 
 export async function POST(request) {
   try {
@@ -12,15 +13,45 @@ export async function POST(request) {
       );
     }
 
-    // In a production app, persist to database or notify team
-    const orderId = `SM-${Date.now().toString().slice(-6)}`;
+    const orderReference = `SM-${Date.now().toString().slice(-6)}`;
+    const adminClient = getSupabaseAdmin();
+
+    let dbRecord = null;
+    if (adminClient) {
+      try {
+        const { data, error } = await adminClient
+          .from('orders')
+          .insert([
+            {
+              order_reference: orderReference,
+              customer_name: name,
+              phone,
+              address: address || '',
+              items,
+              total_amount: totalAmount,
+              status: 'pending'
+            }
+          ])
+          .select()
+          .single();
+
+        if (error) {
+          console.warn('Supabase order insertion warning:', error.message);
+        } else {
+          dbRecord = data;
+        }
+      } catch (dbErr) {
+        console.warn('Supabase DB error:', dbErr.message);
+      }
+    }
 
     return NextResponse.json({
       success: true,
-      orderId,
+      orderId: orderReference,
+      persisted: Boolean(dbRecord),
       message: 'Order inquiry received successfully! Our team will contact you shortly.',
       order: {
-        orderId,
+        orderId: orderReference,
         name,
         phone,
         address: address || 'Not provided',
