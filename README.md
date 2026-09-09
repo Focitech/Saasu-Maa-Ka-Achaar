@@ -1,21 +1,19 @@
 # Saasu Maa Ka Achaar (सासू माँ का अचार)
 
-Official website and ordering system for **Saasu Maa's Food** — homemade traditional Indian pickles prepared with 100% mustard oil, time-tested family recipes, and zero preservatives.
+Official website and ordering platform for **Saasu Maa's Food** — traditional Indian homemade pickles prepared with 100% mustard oil, whole handpicked spices, and zero preservatives.
 
 ---
 
-## Highlights
+## Features
 
-- **Compact, Responsive Header**: Streamlined 52px sticky navbar with single-line aligned navigation and mobile drawer toggle.
-- **Product Catalog**: Dynamic categorization across 8 authentic pickle varieties (Mango, Spicy, Digestive, Special).
-- **Direct Ordering Channels**:
-  - One-click WhatsApp order generation (+91 8979319003) with pre-filled itemized breakdown.
-  - Direct telephone booking badge.
-  - Delivery inquiry form connected to the backend API and database.
-- **Floating Contact Actions**: Always-accessible WhatsApp and direct phone call buttons.
+- **Interactive Product Catalog**: Real client product posters with dynamic size switching across **250g**, **500g**, and **1kg** jars.
+- **Official Rate Card & Price List**: Dedicated section displaying the authentic price list poster and interactive rate table.
+- **Real Kitchen Gallery**: Visual showcase of freshly packaged pickle jars straight from the kitchen.
+- **Direct WhatsApp & Phone Ordering**: One-tap pre-filled WhatsApp ordering and direct call booking (`+91 8979319003`).
+- **Mobile Optimized**: Clean, non-overflowing navbar with responsive slide-down menu.
 - **Dual-Tier Supabase Integration**:
-  - **User Client (`anon`)**: Safe for browser and client queries with Row Level Security (RLS).
-  - **Admin Client (`service_role`)**: Strictly server-side elevated access for backend workflows and orders.
+  - `anon` client for public browsing and order submissions (RLS enforced).
+  - `service_role` admin client for backend management and processing.
 
 ---
 
@@ -33,40 +31,25 @@ Official website and ordering system for **Saasu Maa's Food** — homemade tradi
 
 ```
 ├── public/
-│   └── images/              # Brand logo and billboard graphics
+│   └── images/
+│       ├── products/        # Cropped product artworks (mango, lahsun, lal mirch, etc.)
+│       ├── brand-poster.png # High-res brand creative
+│       ├── price-list.png   # Official rate card poster
+│       └── real-jars.png    # Kitchen shelf packaging showcase
 ├── src/
 │   ├── app/
 │   │   ├── api/
-│   │   │   ├── orders/       # Backend route for order processing
-│   │   │   └── products/     # Backend route for product catalog
-│   │   ├── globals.css       # Design tokens and responsive styles
-│   │   ├── layout.js         # App root layout & SEO metadata
-│   │   └── page.js           # Landing page & store logic
+│   │   │   ├── orders/      # Backend route for order processing
+│   │   │   └── products/    # Backend route for catalog & pricing
+│   │   ├── globals.css      # Design tokens, catalog grid, & responsive styles
+│   │   ├── layout.js        # Root layout & SEO metadata
+│   │   └── page.js          # Interactive store, size selectors, & checkout
 │   └── lib/
-│       └── supabase/         # Supabase client (anon) & admin (service_role)
+│       └── supabase/        # User client (anon) & admin client (service_role)
 ├── supabase/
-│   └── schema.sql            # PostgreSQL schema & RLS policies
-├── .env.example
-├── package.json
-└── test-endpoints.mjs        # Endpoint verification script
+│   └── schema.sql           # Database schema & RLS policies
+└── .env.example             # Environment variables template
 ```
-
----
-
-## Environment Variables
-
-Copy `.env.example` to `.env.local` and provide your project keys:
-
-```bash
-# Public Client (Safe for browser)
-NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
-
-# Admin Client (Server-side only)
-SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
-```
-
-To initialize your Supabase tables, run `supabase/schema.sql` in the Supabase SQL Editor.
 
 ---
 

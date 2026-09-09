@@ -5,98 +5,111 @@ import Image from 'next/image';
 
 const INITIAL_PRODUCTS = [
   {
-    id: 'aam-ka-achaar',
-    name: 'Aam Ka Achaar',
+    id: 'mango-pickle',
+    name: 'Mango Pickle',
     hindiName: 'आम का अचार',
     category: 'Mango',
-    icon: '🥭',
+    image: '/images/products/mango.png',
     desc: 'Desi Ramkela mangoes marinated in pure wood-pressed mustard oil with roasted fenugreek and fennel.',
-    price: 249,
-    weight: '500g',
+    rates: { '250g': 85, '500g': 150, '1kg': 290 },
     badge: 'Bestseller'
   },
   {
-    id: 'meetha-aam',
-    name: 'Meetha Aam Achaar',
-    hindiName: 'मीठा आम अचार',
-    category: 'Mango',
-    icon: '🍯',
-    desc: 'Traditional sun-cooked sweet & tangy mango chunda infused with jaggery and aromatic cardamom.',
-    price: 279,
-    weight: '500g',
-    badge: 'Tradition'
-  },
-  {
-    id: 'mix-achaar',
-    name: 'Mix Achaar',
-    hindiName: 'मिक्स अचार',
-    category: 'Classic',
-    icon: '🥕',
-    desc: 'Crisp hand-cut carrots, tender cauliflower, mango chunks and chillies soaked in spicy mustard brine.',
-    price: 239,
-    weight: '500g',
-    badge: 'Popular'
-  },
-  {
-    id: 'hari-mirch',
-    name: 'Hari Mirch Achaar',
-    hindiName: 'हरी मिर्च अचार',
-    category: 'Spicy',
-    icon: '🌶️',
-    desc: 'Spicy farm-fresh green chillies hand-slit and filled with coarse mustard seeds and tangy amchur.',
-    price: 219,
-    weight: '400g',
-    badge: 'Hot & Zesty'
-  },
-  {
-    id: 'nimbu-achaar',
-    name: 'Nimbu Achaar',
-    hindiName: 'नींबू अचार',
-    category: 'Digestive',
-    icon: '🍋',
-    desc: 'Aged thin-skin kagzi lemons cured with rock salt and ajwain. 100% oil-free and great for digestion.',
-    price: 229,
-    weight: '500g',
-    badge: 'Oil-Free'
-  },
-  {
-    id: 'lahsun-achaar',
-    name: 'Lahsun Achaar',
-    hindiName: 'लहसुन अचार',
-    category: 'Spicy',
-    icon: '🧄',
-    desc: 'Whole peeled garlic cloves sautéed and pickled in crushed red chilli and mustard gravy.',
-    price: 269,
-    weight: '400g',
-    badge: 'Immunity'
-  },
-  {
-    id: 'kathal-achaar',
-    name: 'Kathal Achaar',
+    id: 'khatal-pickle',
+    name: 'Khatal Pickle',
     hindiName: 'कटहल अचार',
     category: 'Special',
-    icon: '🪴',
-    desc: 'Tender baby jackfruit slow-cooked and steeped in authentic Awadhi pickling spices.',
-    price: 289,
-    weight: '500g',
+    image: '/images/brand-poster.png',
+    desc: 'Tender baby raw jackfruit marinated with rich Awadhi spices and pure mustard oil.',
+    rates: { '250g': 95, '500g': 185, '1kg': 360 },
     badge: 'Heritage'
   },
   {
-    id: 'karonda-achaar',
-    name: 'Karonda Achaar',
-    hindiName: 'करोंदा अचार',
+    id: 'karonda-mirch-mix',
+    name: 'Karonda Mirch Mix',
+    hindiName: 'करोंदा मिर्च मिक्स अचार',
     category: 'Special',
-    icon: '🍒',
+    image: '/images/products/karonda.png',
     desc: 'Seasonal wild cranberries with green chillies creating an irresistible sour-spicy explosion.',
-    price: 259,
-    weight: '400g',
+    rates: { '250g': 95, '500g': 185, '1kg': 360 },
     badge: 'Seasonal'
+  },
+  {
+    id: 'green-chilli-pickle',
+    name: 'Green Chilli Pickle',
+    hindiName: 'हरी मिर्च का अचार',
+    category: 'Spicy',
+    image: '/images/products/hari-mirch.png',
+    desc: 'Farm-fresh slit green chillies packed with coarse mustard seeds and tangy amchur.',
+    rates: { '250g': 95, '500g': 185, '1kg': 360 },
+    badge: 'Hot & Zesty'
+  },
+  {
+    id: 'red-chilli-pickle',
+    name: 'Red Chilli Pickle',
+    hindiName: 'लाल मिर्च का अचार',
+    category: 'Spicy',
+    image: '/images/products/lal-mirch.png',
+    desc: 'Authentic Banarasi thick stuffed red chillies seasoned with whole roasted spices.',
+    rates: { '250g': 95, '500g': 185, '1kg': 360 },
+    badge: 'Banarasi Special'
+  },
+  {
+    id: 'meetha-mango-pickle',
+    name: 'Meetha Mango Pickle',
+    hindiName: 'मीठा आम अचार',
+    category: 'Mango',
+    image: '/images/products/mango.png',
+    desc: 'Traditional sun-cooked sweet & tangy mango chunda infused with desi jaggery and cardamom.',
+    rates: { '250g': 85, '500g': 150, '1kg': 290 },
+    badge: 'Sweet & Tangy'
+  },
+  {
+    id: 'lahsun-pickle',
+    name: 'Lahsun Pickle',
+    hindiName: 'लहसुन अचार',
+    category: 'Spicy',
+    image: '/images/products/lahsun.png',
+    desc: 'Whole peeled desi garlic cloves sautéed and pickled in crushed red chilli and mustard gravy.',
+    rates: { '250g': 120, '500g': 235, '1kg': 460 },
+    badge: 'Immunity'
+  },
+  {
+    id: 'kamal-kakdi-mix',
+    name: 'Kamal Kakdi Mix',
+    hindiName: 'कमल ककड़ी मिक्स अचार',
+    category: 'Classic',
+    image: '/images/brand-poster.png',
+    desc: 'Crunchy lotus stem (Bhein) pickled with seasonal carrots and cauliflower.',
+    rates: { '250g': 95, '500g': 185, '1kg': 360 },
+    badge: 'Crispy Mix'
+  },
+  {
+    id: 'lemon-pickle',
+    name: 'Lemon Pickle',
+    hindiName: 'नींबू अचार',
+    category: 'Digestive',
+    image: '/images/products/lemon-jar.png',
+    desc: 'Aged thin-skin Kagzi lemons cured with rock salt and ajwain. 100% oil-free and digestive.',
+    rates: { '250g': 105, '500g': 205, '1kg': 400 },
+    badge: 'Oil-Free'
+  },
+  {
+    id: 'sweet-lemon',
+    name: 'Sweet Lemon Pickle',
+    hindiName: 'मीठा नींबू अचार',
+    category: 'Digestive',
+    image: '/images/products/lemon.png',
+    desc: 'Sun-matured sweet and sour lemons with black pepper and jaggery.',
+    rates: { '250g': 105, '500g': 205, '1kg': 400 },
+    badge: 'Sun-Matured'
   }
 ];
 
 export default function Home() {
   const [products] = useState(INITIAL_PRODUCTS);
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [selectedWeights, setSelectedWeights] = useState({});
   const [cart, setCart] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [toast, setToast] = useState('');
@@ -115,24 +128,37 @@ export default function Home() {
     setTimeout(() => setToast(''), 3200);
   };
 
-  const addToCart = (product) => {
-    setCart((prevCart) => {
-      const existing = prevCart.find((item) => item.id === product.id);
-      if (existing) {
-        return prevCart.map((item) =>
-          item.id === product.id ? { ...item, qty: item.qty + 1 } : item
-        );
-      }
-      return [...prevCart, { ...product, qty: 1 }];
-    });
-    showToast(`Added ${product.name} to your basket!`);
+  const handleWeightChange = (productId, weight) => {
+    setSelectedWeights(prev => ({ ...prev, [productId]: weight }));
   };
 
-  const updateQty = (id, change) => {
+  const addToCart = (product, weight, price) => {
+    const cartItemId = `${product.id}-${weight}`;
+    setCart((prevCart) => {
+      const existing = prevCart.find((item) => item.cartItemId === cartItemId);
+      if (existing) {
+        return prevCart.map((item) =>
+          item.cartItemId === cartItemId ? { ...item, qty: item.qty + 1 } : item
+        );
+      }
+      return [...prevCart, {
+        cartItemId,
+        id: product.id,
+        name: product.name,
+        hindiName: product.hindiName,
+        weight,
+        price,
+        qty: 1
+      }];
+    });
+    showToast(`Added ${product.name} (${weight}) to basket!`);
+  };
+
+  const updateQty = (cartItemId, change) => {
     setCart((prevCart) =>
       prevCart
         .map((item) => {
-          if (item.id === id) {
+          if (item.cartItemId === cartItemId) {
             const newQty = item.qty + change;
             return newQty > 0 ? { ...item, qty: newQty } : null;
           }
@@ -154,7 +180,6 @@ export default function Home() {
 
     setIsSubmitting(true);
     try {
-      // Call Next.js backend API
       const res = await fetch('/api/orders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -186,7 +211,7 @@ export default function Home() {
   const openWhatsAppOrder = () => {
     if (cart.length === 0) return;
     const itemList = cart.map(i => `${i.name} (${i.weight}) x ${i.qty} = ₹${i.price * i.qty}`).join('%0A');
-    const msg = `Namaste Saasu Maa's Food!%0AI would like to order the following pickles:%0A${itemList}%0A%0ATotal: ₹${totalAmount}%0A%0APlease let me know the payment and delivery details.`;
+    const msg = `Namaste Saasu Maa's Food!%0AI would like to order the following pickles:%0A${itemList}%0A%0ATotal: ₹${totalAmount}%0A%0APlease confirm the payment and delivery details.`;
     window.open(`https://wa.me/918979319003?text=${msg}`, '_blank');
   };
 
@@ -221,8 +246,9 @@ export default function Home() {
 
           <ul className="nav-links">
             <li><a href="#varieties">Our Varieties</a></li>
+            <li><a href="#price-list">Price List</a></li>
+            <li><a href="#shelf">Real Jars</a></li>
             <li><a href="#heritage">Heritage & Story</a></li>
-            <li><a href="#why-us">Why Choose Us</a></li>
             <li><a href="#contact">Contact</a></li>
           </ul>
 
@@ -261,8 +287,9 @@ export default function Home() {
         {isMobileMenuOpen && (
           <div className="mobile-menu open">
             <a href="#varieties" onClick={() => setIsMobileMenuOpen(false)}>🌶️ Explore All Varieties</a>
+            <a href="#price-list" onClick={() => setIsMobileMenuOpen(false)}>📋 Official Price List</a>
+            <a href="#shelf" onClick={() => setIsMobileMenuOpen(false)}>🫙 Real Kitchen Jars</a>
             <a href="#heritage" onClick={() => setIsMobileMenuOpen(false)}>📖 Heritage & Story</a>
-            <a href="#why-us" onClick={() => setIsMobileMenuOpen(false)}>✨ Why Choose Us</a>
             <a href="#contact" onClick={() => setIsMobileMenuOpen(false)}>📍 Contact Us</a>
             <div className="mobile-actions-row">
               <a href="tel:8979319003" className="secondary-btn" style={{ flex: 1, justifyContent: 'center' }}>
@@ -298,8 +325,8 @@ export default function Home() {
 
               <div className="hero-pills">
                 <span className="pill-item">✓ Zero Chemical Preservatives</span>
-                <span className="pill-item">✓ Pure Mustard Oil</span>
-                <span className="pill-item">✓ Authentic Desi Recipes</span>
+                <span className="pill-item">✓ 100% Mustard Oil</span>
+                <span className="pill-item">✓ No Palm Oil</span>
                 <span className="pill-item">✓ Sun-Ripened Naturally</span>
               </div>
 
@@ -307,25 +334,19 @@ export default function Home() {
                 <a href="#varieties" className="primary-btn">
                   Explore Varieties
                 </a>
-                <button
-                  className="secondary-btn"
-                  onClick={() => {
-                    const el = document.getElementById('heritage');
-                    if (el) el.scrollIntoView({ behavior: 'smooth' });
-                  }}
-                >
-                  Our Heritage Story
-                </button>
+                <a href="#price-list" className="secondary-btn">
+                  View Price List
+                </a>
               </div>
             </div>
 
             <div className="hero-visual">
               <div className="billboard-frame">
                 <Image
-                  src="/images/billboard.png"
-                  alt="सासू माँ का अचार Billboard Showcase"
-                  width={420}
-                  height={620}
+                  src="/images/brand-poster.png"
+                  alt="सासू माँ का अचार Official Brand Poster"
+                  width={440}
+                  height={440}
                   priority
                 />
                 <div className="frame-tag">
@@ -370,14 +391,14 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Catalog Section */}
+        {/* Catalog Section with Real Product Images and Size Selector */}
         <section id="varieties" className="catalog-section">
           <div className="container">
             <div className="section-head">
               <span className="section-subtag">Signature Collection</span>
               <h2 className="section-title">Our Handcrafted Achaar Varieties</h2>
               <p className="section-desc">
-                From pungent raw mango to sun-cured oil-free lemons, discover the authentic taste of tradition.
+                Choose your favorite authentic pickles in 250g, 500g, or 1kg jars.
               </p>
             </div>
 
@@ -394,35 +415,170 @@ export default function Home() {
             </div>
 
             <div className="products-grid">
-              {filteredProducts.map((p) => (
-                <div key={p.id} className="product-card">
-                  <div className="card-top">
-                    <span className="category-tag">{p.badge}</span>
-                    <span style={{ fontSize: '0.8rem', color: '#9a6b1c', fontWeight: 'bold' }}>{p.category}</span>
-                  </div>
+              {filteredProducts.map((p) => {
+                const currentWeight = selectedWeights[p.id] || '500g';
+                const currentPrice = p.rates[currentWeight];
 
-                  <div className="jar-icon-placeholder">{p.icon}</div>
-
-                  <h3 className="product-title">{p.name}</h3>
-                  <div className="product-hindi">{p.hindiName}</div>
-                  <p className="product-desc">{p.desc}</p>
-
-                  <div className="product-meta">
-                    <div className="price-box">
-                      <span className="price">₹{p.price}</span>
-                      <span className="weight">/ {p.weight} jar</span>
+                return (
+                  <div key={p.id} className="product-card">
+                    <div className="card-top">
+                      <span className="category-tag">{p.badge}</span>
+                      <span style={{ fontSize: '0.8rem', color: '#9a6b1c', fontWeight: 'bold' }}>{p.category}</span>
                     </div>
-                  </div>
 
-                  <button
-                    id={`add-btn-${p.id}`}
-                    className="add-btn"
-                    onClick={() => addToCart(p)}
+                    <div className="product-img-wrap">
+                      <Image
+                        src={p.image}
+                        alt={p.name}
+                        width={280}
+                        height={220}
+                        className="product-card-img"
+                      />
+                    </div>
+
+                    <h3 className="product-title">{p.name}</h3>
+                    <div className="product-hindi">{p.hindiName}</div>
+                    <p className="product-desc">{p.desc}</p>
+
+                    {/* Weight Selector */}
+                    <div className="weight-selector">
+                      {['250g', '500g', '1kg'].map((w) => (
+                        <button
+                          key={w}
+                          type="button"
+                          className={`weight-chip ${currentWeight === w ? 'active' : ''}`}
+                          onClick={() => handleWeightChange(p.id, w)}
+                        >
+                          {w}
+                        </button>
+                      ))}
+                    </div>
+
+                    <div className="product-meta">
+                      <div className="price-box">
+                        <span className="price">₹{currentPrice}</span>
+                        <span className="weight">/ {currentWeight} jar</span>
+                      </div>
+                    </div>
+
+                    <button
+                      id={`add-btn-${p.id}`}
+                      className="add-btn"
+                      onClick={() => addToCart(p, currentWeight, currentPrice)}
+                    >
+                      <span>Add to Basket +</span>
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* Official Rate Card & Price List Section */}
+        <section id="price-list" className="price-list-section">
+          <div className="container">
+            <div className="section-head">
+              <span className="section-subtag">Official Rate Card</span>
+              <h2 className="section-title">Saasu Maa Ka Achaar Price List</h2>
+              <p className="section-desc">
+                Clear, transparent rates for all homemade varieties. Handcrafted fresh with pure ingredients.
+              </p>
+            </div>
+
+            <div className="price-list-grid">
+              <div className="price-list-poster-frame">
+                <Image
+                  src="/images/price-list.png"
+                  alt="Official Price List Poster"
+                  width={750}
+                  height={500}
+                />
+              </div>
+
+              <div className="price-table-card">
+                <h3 style={{ color: 'var(--primary-maroon)', fontSize: '1.25rem', marginBottom: '8px' }}>
+                  Complete Sizing & Pricing
+                </h3>
+                <p style={{ fontSize: '0.85rem', color: 'var(--muted-text)', marginBottom: '14px' }}>
+                  All prices in INR. Minimum order and custom packaging available on inquiry.
+                </p>
+
+                <table className="price-table">
+                  <thead>
+                    <tr>
+                      <th>Pickle Variety</th>
+                      <th>250g</th>
+                      <th>500g</th>
+                      <th>1kg</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {products.map((p) => (
+                      <tr key={p.id}>
+                        <td>
+                          <strong>{p.name}</strong>
+                          <div style={{ fontSize: '0.78rem', color: '#9a6b1c' }}>{p.hindiName}</div>
+                        </td>
+                        <td className="rate-badge">₹{p.rates['250g']}</td>
+                        <td className="rate-badge">₹{p.rates['500g']}</td>
+                        <td className="rate-badge">₹{p.rates['1kg']}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+
+                <div style={{ marginTop: '20px', textAlign: 'center' }}>
+                  <a
+                    href="https://wa.me/918979319003?text=Namaste%2C%20I%20would%20like%20to%20order%20pickles%20from%20the%20price%20list."
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="primary-btn"
+                    style={{ width: '100%', justifyContent: 'center' }}
                   >
-                    <span>Add to Basket +</span>
-                  </button>
+                    💬 Order Directly via WhatsApp
+                  </a>
                 </div>
-              ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Real Kitchen Jars Shelf Showcase */}
+        <section id="shelf" className="real-shelf-section">
+          <div className="container shelf-grid">
+            <div className="shelf-img-frame">
+              <Image
+                src="/images/real-jars.png"
+                alt="Real Pickles on Kitchen Shelf"
+                width={560}
+                height={560}
+              />
+            </div>
+            <div>
+              <span className="section-subtag">Direct from Our Kitchen</span>
+              <h2 style={{ fontSize: '2.2rem', color: 'var(--primary-deep)', marginBottom: '16px', lineHeight: '1.2' }}>
+                Asli Ghar Ka Swad, Bottled with Hygiene & Love
+              </h2>
+              <p style={{ color: 'var(--muted-text)', lineHeight: '1.7', marginBottom: '20px' }}>
+                Every jar of Saasu Maa Ka Achaar is made in small, hygienic batches.
+                We use pure wood-pressed mustard oil, selected whole spices, and age-old traditional recipes
+                with zero chemicals, palm oil, or artificial colors.
+              </p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '26px' }}>
+                <div>✓ <strong>100% Home Made with Hygiene</strong></div>
+                <div>✓ <strong>No Palm Oil • No Chemical Preservatives</strong></div>
+                <div>✓ <strong>Available in Premium Sealed Barnis & Jars</strong></div>
+                <div>✓ <strong>Fast Delivery Across India</strong></div>
+              </div>
+              <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+                <a href="#varieties" className="primary-btn">
+                  Shop Now
+                </a>
+                <a href="tel:8979319003" className="secondary-btn">
+                  📞 Call: 8979319003
+                </a>
+              </div>
             </div>
           </div>
         </section>
@@ -448,12 +604,12 @@ export default function Home() {
                   <div className="stat-label">Natural & Desi</div>
                 </div>
                 <div className="stat-card">
-                  <div className="stat-number">8+</div>
-                  <div className="stat-label">Traditional Varieties</div>
+                  <div className="stat-number">10+</div>
+                  <div className="stat-label">Authentic Varieties</div>
                 </div>
                 <div className="stat-card">
                   <div className="stat-number">0%</div>
-                  <div className="stat-label">Artificial Chemicals</div>
+                  <div className="stat-label">Preservatives</div>
                 </div>
               </div>
             </div>
@@ -487,15 +643,17 @@ export default function Home() {
               <>
                 <div className="cart-items-list">
                   {cart.map((item) => (
-                    <div key={item.id} className="cart-item-row">
+                    <div key={item.cartItemId} className="cart-item-row">
                       <div>
                         <div className="item-name">{item.name}</div>
-                        <div style={{ fontSize: '0.8rem', color: '#888' }}>₹{item.price} each • {item.weight}</div>
+                        <div style={{ fontSize: '0.8rem', color: '#888' }}>
+                          ₹{item.price} each • {item.weight} ({item.hindiName})
+                        </div>
                       </div>
                       <div className="item-qty-wrap">
-                        <button className="qty-btn" onClick={() => updateQty(item.id, -1)}>-</button>
+                        <button className="qty-btn" onClick={() => updateQty(item.cartItemId, -1)}>-</button>
                         <span>{item.qty}</span>
-                        <button className="qty-btn" onClick={() => updateQty(item.id, 1)}>+</button>
+                        <button className="qty-btn" onClick={() => updateQty(item.cartItemId, 1)}>+</button>
                         <span style={{ fontWeight: '700', marginLeft: '10px' }}>₹{item.price * item.qty}</span>
                       </div>
                     </div>
@@ -573,12 +731,13 @@ export default function Home() {
             </div>
 
             <div className="footer-links">
-              <h4>Quick Links</h4>
+              <h4>Pickle Varieties</h4>
               <ul>
-                <li><a href="#varieties">Aam Ka Achaar</a></li>
-                <li><a href="#varieties">Hari Mirch Achaar</a></li>
-                <li><a href="#varieties">Nimbu Achaar</a></li>
-                <li><a href="#heritage">Our Heritage</a></li>
+                <li><a href="#varieties">Mango Pickle (आम का अचार)</a></li>
+                <li><a href="#varieties">Lahsun Pickle (लहसुन अचार)</a></li>
+                <li><a href="#varieties">Green Chilli (हरी मिर्च)</a></li>
+                <li><a href="#varieties">Lemon Pickle (नींबू अचार)</a></li>
+                <li><a href="#price-list">Official Price List</a></li>
               </ul>
             </div>
 

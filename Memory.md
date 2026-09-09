@@ -5,18 +5,23 @@
 - Database & Backend: Supabase (`@supabase/supabase-js`)
   - User / Public: `getSupabaseClient()` using `NEXT_PUBLIC_SUPABASE_ANON_KEY` (RLS enforced)
   - Admin / Server: `getSupabaseAdmin()` using `SUPABASE_SERVICE_ROLE_KEY` (Server-only, bypasses RLS)
-- Frontend: Client & Server components with category filters, basket state, direct WhatsApp & Call ordering
+- Frontend: Client & Server components with category filters, dynamic 250g/500g/1kg size selector, basket state, direct WhatsApp & Call ordering
 - Backend: Next.js Route Handlers (`/api/products`, `/api/orders`) connected to Supabase tables
 - Contact & Booking: `8979319003` (Phone & WhatsApp)
-- Assets: Authentic Saasu Maa Ka Achaar branding assets (`/images/logo.jpg`, `/images/billboard.png`, `/images/poster.png`, `/images/real-jars.png`)
+- Assets:
+  - Official Price List: `/images/price-list.png`
+  - Brand Posters: `/images/brand-poster.png`, `/images/logo.jpg`, `/images/billboard.png`, `/images/real-jars.png`
+  - Product Artworks: `/images/products/mango.png`, `lahsun.png`, `lal-mirch.png`, `hari-mirch.png`, `lemon-jar.png`, `lemon.png`, `karonda.png`
 - Repository: `https://github.com/Focitech/Saasu-Maa-Ka-Achaar.git` (main branch)
 
 ## Key Milestones
 - Initialized Next.js setup with JavaScript and Vanilla CSS.
-- Implemented responsive landing page, branding showcase, product catalog, and checkout modal.
-- Configured backend API endpoints for product retrieval and order placement.
-- Fixed mobile navbar overflow: Hid redundant desktop order button on screens <= 860px, streamlined basket to icon/badge on mobile, and moved all primary CTAs into the mobile drawer.
-- Integrated official brand details: 100% Mustard Oil, No Preservatives, Maa ke haath ka swaad, and direct booking via 8979319003.
-- Removed unwanted hero badge pill from top of hero banner.
-- Configured dual-tier Supabase architecture (`anon` for user, `service_role` for admin) with SQL schema & RLS policies in `supabase/schema.sql`.
+- Cropped and integrated all client WhatsApp images into high-res transparent/clean product creatives:
+  - Price List (`price-list.png`)
+  - Square Brand Creative (`brand-poster.png`)
+  - Product Creatives: Mango, Lahsun, Lal Mirch, Hari Mirch, Lemon, Karonda.
+- Updated Product Catalog with dynamic size selector (250g, 500g, 1kg) matching official rates.
+- Added dedicated Official Rate Card & Price List section with interactive pricing breakdown.
+- Added Real Kitchen Jars showcase (`real-jars.png`) highlighting hygiene and pure ingredients.
+- Configured dual-tier Supabase architecture (`anon` for user, `service_role` for admin).
 - Pushed complete codebase and assets to GitHub repository `https://github.com/Focitech/Saasu-Maa-Ka-Achaar.git`.

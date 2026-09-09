@@ -525,6 +525,156 @@ body {
   margin: 10px 0 16px;
 }
 
+.product-img-wrap {
+  width: 100%;
+  height: 220px;
+  position: relative;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: #fdf8ee;
+  border: 1px solid rgba(201, 147, 59, 0.25);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.product-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover .product-card-img {
+  transform: scale(1.04);
+}
+
+.weight-selector {
+  display: flex;
+  gap: 6px;
+  margin: 10px 0 14px;
+}
+
+.weight-chip {
+  flex: 1;
+  background: #fbf6ec;
+  border: 1px solid var(--border-gold);
+  color: var(--dark-text);
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 5px 0;
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.weight-chip.active {
+  background: var(--primary-maroon);
+  color: #ffffff;
+  border-color: var(--primary-maroon);
+  box-shadow: 0 2px 6px rgba(104, 15, 25, 0.25);
+}
+
+/* Official Price List Section */
+.price-list-section {
+  padding: 80px 0;
+  background: #fcf8f0;
+  border-top: 1px solid var(--border-gold);
+  border-bottom: 1px solid var(--border-gold);
+}
+
+.price-list-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 36px;
+  align-items: center;
+}
+
+.price-list-poster-frame {
+  position: relative;
+  background: #ffffff;
+  padding: 10px;
+  border-radius: var(--radius-md);
+  border: 2px solid var(--border-gold);
+  box-shadow: var(--shadow-lg);
+}
+
+.price-list-poster-frame img {
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-sm);
+  display: block;
+}
+
+.price-table-card {
+  background: #ffffff;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-gold);
+  padding: 24px;
+  box-shadow: var(--shadow-md);
+}
+
+.price-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 14px;
+}
+
+.price-table th {
+  background: var(--primary-deep);
+  color: var(--gold-light);
+  padding: 10px 12px;
+  font-size: 0.82rem;
+  text-align: left;
+  border-radius: 4px;
+}
+
+.price-table td {
+  padding: 10px 12px;
+  font-size: 0.86rem;
+  border-bottom: 1px dashed #eee;
+  color: var(--dark-text);
+}
+
+.price-table tr:hover td {
+  background: #faf4e6;
+}
+
+.rate-badge {
+  font-weight: 700;
+  color: var(--primary-maroon);
+}
+
+/* Real Jars Shelf Showcase */
+.real-shelf-section {
+  padding: 70px 0;
+  background: #ffffff;
+}
+
+.shelf-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: center;
+}
+
+.shelf-img-frame {
+  position: relative;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  border: 3px solid var(--gold-accent);
+}
+
+.shelf-img-frame img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+
 .product-title {
   font-size: 1.25rem;
   font-weight: 700;
@@ -968,6 +1118,12 @@ body {
     grid-template-columns: 1fr;
   }
   .footer-grid {
+    grid-template-columns: 1fr;
+  }
+  .price-list-grid {
+    grid-template-columns: 1fr;
+  }
+  .shelf-grid {
     grid-template-columns: 1fr;
   }
 }

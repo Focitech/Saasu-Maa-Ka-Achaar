@@ -25,6 +25,7 @@
 *.pem
 Screenshot*.png
 719483219_*.jpg
+WhatsApp Image*.jpeg
 
 # debug
 npm-debug.log*
