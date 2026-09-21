@@ -1,6 +1,6 @@
 -- ==========================================================
--- Saasu Maa Ka Achaar: Supabase Database Schema
--- Complete Idempotent Production Schema (safe to run multiple times)
+-- Saasu Maa Ka Achaar: Supabase Database Migration
+-- Idempotent script (safe to re-run multiple times)
 -- ==========================================================
 
 create extension if not exists "uuid-ossp";
@@ -40,7 +40,7 @@ create policy "Service role full access on profiles"
   with check (true);
 
 -- ==========================================================
--- 2. EMAIL OTPS (Passwordless Email Auth)
+-- 2. EMAIL OTPS
 -- ==========================================================
 create table if not exists public.email_otps (
   id uuid primary key default uuid_generate_v4(),
@@ -66,68 +66,34 @@ create policy "Service role full access on email_otps"
   with check (true);
 
 -- ==========================================================
--- 3. PRODUCTS TABLE
--- ==========================================================
-create table if not exists public.products (
-  id text primary key,
-  name text not null,
-  hindi_name text not null,
-  category text not null,
-  tagline text,
-  description text,
-  price numeric(10, 2) not null,
-  weight text not null,
-  in_stock boolean default true,
-  image_url text,
-  created_at timestamp with time zone default timezone('utc'::text, now()) not null
-);
-
-alter table public.products enable row level security;
-
-drop policy if exists "Public users can view products" on public.products;
-create policy "Public users can view products"
-  on public.products
-  for select
-  using (true);
-
-drop policy if exists "Admin service role can manage products" on public.products;
-create policy "Admin service role can manage products"
-  on public.products
-  for all
-  to service_role
-  using (true)
-  with check (true);
-
--- ==========================================================
--- 4. ORDERS TABLE (Optimized for Admin Dashboard & Pagination)
+-- 3. ORDERS ENHANCEMENTS & INDEXES
 -- ==========================================================
 create table if not exists public.orders (
   id uuid primary key default uuid_generate_v4(),
   order_reference text unique not null,
-  user_id uuid references public.profiles(id) on delete set null,
   customer_name text not null,
-  email text,
   phone text not null,
   address text,
-  city text default 'Bareilly',
-  pincode text,
   items jsonb not null default '[]'::jsonb,
-  subtotal numeric(10, 2) not null default 0,
-  shipping_fee numeric(10, 2) not null default 0,
   total_amount numeric(10, 2) not null,
   status text not null default 'pending' check (status in ('pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled')),
-  payment_status text not null default 'unpaid' check (payment_status in ('unpaid', 'authorized', 'paid', 'refunded', 'failed')),
-  payment_method text default 'cod' check (payment_method in ('cod', 'upi', 'online', 'whatsapp')),
-  admin_notes text,
-  created_at timestamp with time zone default timezone('utc'::text, now()) not null,
-  updated_at timestamp with time zone default timezone('utc'::text, now()) not null
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
+
+alter table public.orders add column if not exists user_id uuid references public.profiles(id) on delete set null;
+alter table public.orders add column if not exists email text;
+alter table public.orders add column if not exists city text default 'Bareilly';
+alter table public.orders add column if not exists pincode text;
+alter table public.orders add column if not exists subtotal numeric(10, 2) not null default 0;
+alter table public.orders add column if not exists shipping_fee numeric(10, 2) not null default 0;
+alter table public.orders add column if not exists payment_status text not null default 'unpaid';
+alter table public.orders add column if not exists payment_method text default 'cod';
+alter table public.orders add column if not exists admin_notes text;
+alter table public.orders add column if not exists updated_at timestamp with time zone default timezone('utc'::text, now()) not null;
 
 create index if not exists idx_orders_created_at on public.orders (created_at desc);
 create index if not exists idx_orders_status_created on public.orders (status, created_at desc);
-create index if not exists idx_orders_payment_status on public.orders (payment_status, created_at desc);
 create index if not exists idx_orders_user_id on public.orders (user_id, created_at desc);
-create index if not exists idx_orders_reference on public.orders (order_reference);
 
 alter table public.orders enable row level security;
 
@@ -146,7 +112,7 @@ create policy "Admin service role has full access to orders"
   with check (true);
 
 -- ==========================================================
--- 5. PAYMENTS TABLE (With Idempotency & Audit Trail)
+-- 4. PAYMENTS TABLE (With Idempotency)
 -- ==========================================================
 create table if not exists public.payments (
   id uuid primary key default uuid_generate_v4(),
@@ -178,21 +144,3 @@ create policy "Service role full access on payments"
   to service_role
   using (true)
   with check (true);
-
--- ==========================================================
--- 6. SEED PRODUCTS
--- ==========================================================
-insert into public.products (id, name, hindi_name, category, tagline, description, price, weight, in_stock)
-values
-  ('aam-achaar', 'Aam Ka Achaar', 'आम का अचार', 'Mango', 'Desi Ramkela mangoes in wood-pressed mustard oil', 'Handcrafted with raw ramkela mangoes, cold-pressed mustard oil, and grandma’s secret spice blend.', 249.00, '500g', true),
-  ('meetha-aam', 'Meetha Aam Achaar', 'मीठा आम अचार', 'Mango', 'Sweet, tangy, sun-cooked traditional mango chunda', 'Slow-cooked in sunlight with jaggery, cardamom, and gentle Indian spices.', 279.00, '500g', true),
-  ('mix-achaar', 'Mix Achaar', 'मिक्स अचार', 'Classic', 'Crunchy seasonal vegetables in spicy brine', 'Crunchy carrots, raw mango, cauliflower, and green chillies pickled to perfection.', 239.00, '500g', true),
-  ('hari-mirch', 'Hari Mirch Achaar', 'हरी मिर्च अचार', 'Spicy', 'Zesty green chillies with crushed mustard and amchur', 'Stuffed and marinated pungent green chillies with roasted cumin and crushed rai.', 219.00, '400g', true),
-  ('nimbu-achaar', 'Nimbu Achaar', 'नींबू अचार', 'Digestive', 'Oil-free, aged tangy lemon pickle', 'Sun-matured thin-skinned juicy lemons infused with rock salt, hing, and ajwain.', 229.00, '500g', true),
-  ('lahsun-achaar', 'Lahsun Achaar', 'लहसुन अचार', 'Spicy', 'Aromatic garlic cloves steeped in mustard sauce', 'Whole desi garlic cloves steeped in roasted spices and pure mustard oil.', 269.00, '400g', true),
-  ('kathal-achaar', 'Kathal Achaar', 'कटहल अचार', 'Special', 'Tender baby raw jackfruit marinated with rich spices', 'Meaty raw jackfruit pieces seasoned with traditional Uttar Pradesh pickling recipe.', 289.00, '500g', true),
-  ('karonda-achaar', 'Karonda Achaar', 'करोंदा अचार', 'Special', 'Rare wild natal plum with fiery green chillies', 'Crisp, sour tart berries balanced with turmeric, fenugreek, and split mustard seeds.', 259.00, '400g', true)
-on conflict (id) do update set
-  price = excluded.price,
-  weight = excluded.weight,
-  tagline = excluded.tagline;

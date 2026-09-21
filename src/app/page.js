@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 const INITIAL_PRODUCTS = [
   {
@@ -116,6 +117,49 @@ export default function Home() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [customerInfo, setCustomerInfo] = useState({ name: '', phone: '', address: '' });
+  const [isMounted, setIsMounted] = useState(false);
+  const [userSession, setUserSession] = useState(null);
+
+  useEffect(() => {
+    setIsMounted(true);
+    try {
+      const cached = localStorage.getItem('sasumaa_auth_user');
+      if (cached) {
+        setUserSession(JSON.parse(cached));
+      }
+    } catch (e) {}
+
+    fetch('/api/auth/me')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.authenticated && data.user) {
+          setUserSession(data.user);
+          localStorage.setItem('sasumaa_auth_user', JSON.stringify(data.user));
+          setCustomerInfo((prev) => ({
+            name: prev.name || (data.user.fullName && !data.user.fullName.toLowerCase().includes('valued') ? data.user.fullName : '') || '',
+            phone: prev.phone || data.user.phone || '',
+            address: prev.address || '',
+          }));
+        } else {
+          setUserSession(null);
+          localStorage.removeItem('sasumaa_auth_user');
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('sasumaa_auth_user');
+      }
+      setUserSession(null);
+      await fetch('/api/auth/logout', { method: 'POST' });
+      showToast('Logged out successfully');
+    } catch (err) {
+      console.error('Logout error', err);
+    }
+  };
 
   const categories = ['All', 'Mango', 'Classic', 'Spicy', 'Digestive', 'Special'];
 
@@ -414,7 +458,6 @@ export default function Home() {
             />
             <div className="brand-text">
               <h1>सासू माँ का अचार</h1>
-              <span>Saasu Maa&apos;s Food • The Taste of Tradition</span>
             </div>
           </a>
 
@@ -434,6 +477,7 @@ export default function Home() {
             >
               📞 8979319003
             </a>
+
             <button
               id="cart-toggle-btn"
               className="cart-btn"
@@ -444,9 +488,68 @@ export default function Home() {
               <span className="cart-label">Basket</span>
               {totalItemsCount > 0 && <span className="cart-badge">{totalItemsCount}</span>}
             </button>
+
             <a href="#varieties" className="primary-btn desktop-nav-btn">
               Order Online
             </a>
+
+            {/* Auth Button */}
+            {isMounted && (
+              userSession ? (
+                userSession.role === 'admin' ? (
+                  <Link href="/admin" className="nav-auth-btn nav-admin-btn" title="Open Admin Management Console">
+                    <span>🛡️</span>
+                    <span className="auth-btn-name">Admin Console</span>
+                  </Link>
+                ) : userSession.role === 'staff' ? (
+                  <Link href="/admin" className="nav-auth-btn nav-staff-btn" title="Open Staff Portal">
+                    <span>👔</span>
+                    <span className="auth-btn-name">Staff</span>
+                  </Link>
+                ) : (
+                  <Link href="/account" className="nav-auth-btn" title="View Profile">
+                    <span>👤</span>
+                    <span className="auth-btn-name">
+                      {userSession.fullName && !userSession.fullName.toLowerCase().includes('valued')
+                        ? userSession.fullName.split(' ')[0]
+                        : 'Account'}
+                    </span>
+                  </Link>
+                )
+              ) : (
+                <Link href="/login" className="nav-auth-btn" title="Customer Login">
+                  <span>🔑</span>
+                  <span>Sign In</span>
+                </Link>
+              )
+            )}
+
+            {/* Dedicated Logout Icon Button: Placed at the very end on far right */}
+            {isMounted && userSession && (
+              <button
+                onClick={handleLogout}
+                className="nav-logout-btn"
+                title="Sign Out of Account"
+                aria-label="Logout"
+              >
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.4"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="logout-svg-icon"
+                >
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                  <polyline points="16 17 21 12 16 7" />
+                  <line x1="21" y1="12" x2="9" y2="12" />
+                </svg>
+              </button>
+            )}
+
             <button
               className="mobile-toggle"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -460,24 +563,104 @@ export default function Home() {
         {/* Mobile Menu Dropdown */}
         {isMobileMenuOpen && (
           <div className="mobile-menu open">
-            <a href="#varieties" onClick={() => setIsMobileMenuOpen(false)}>🌶️ Explore All Varieties</a>
-            <a href="#price-list" onClick={() => setIsMobileMenuOpen(false)}>📋 Official Price List</a>
-            <a href="#shelf" onClick={() => setIsMobileMenuOpen(false)}>🫙 Real Kitchen Jars</a>
-            <a href="#heritage" onClick={() => setIsMobileMenuOpen(false)}>📖 Heritage & Story</a>
-            <a href="#contact" onClick={() => setIsMobileMenuOpen(false)}>📍 Contact Us</a>
-            <div className="mobile-actions-row">
-              <a href="tel:8979319003" className="secondary-btn" style={{ flex: 1, justifyContent: 'center' }}>
-                📞 8979319003
-              </a>
-              <a
-                href="https://wa.me/918979319003?text=Namaste%2C%20I%20would%20like%20to%20order%20Saasu%20Maa%20Ka%20Achaar"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="primary-btn"
-                style={{ flex: 1, justifyContent: 'center' }}
-              >
-                💬 WhatsApp
-              </a>
+            <a href="#varieties" className="mobile-nav-link" onClick={() => setIsMobileMenuOpen(false)}>
+              🌶️ Explore All Varieties
+            </a>
+            <a href="#price-list" className="mobile-nav-link" onClick={() => setIsMobileMenuOpen(false)}>
+              📋 Official Price List
+            </a>
+            <a href="#shelf" className="mobile-nav-link" onClick={() => setIsMobileMenuOpen(false)}>
+              🫙 Real Kitchen Jars
+            </a>
+            <a href="#heritage" className="mobile-nav-link" onClick={() => setIsMobileMenuOpen(false)}>
+              📖 Heritage & Story
+            </a>
+            <a href="#contact" className="mobile-nav-link" onClick={() => setIsMobileMenuOpen(false)}>
+              📍 Contact Us
+            </a>
+
+            <div className="mobile-actions-container">
+              {/* Row 1: Auth Button (Full Width) */}
+              <div className="mobile-auth-row">
+                {isMounted && userSession ? (
+                  <div className="mobile-auth-logged-cluster">
+                    {userSession.role === 'admin' ? (
+                      <Link
+                        href="/admin"
+                        className="mobile-auth-btn mobile-admin-btn"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        🛡️ Admin Console
+                      </Link>
+                    ) : userSession.role === 'staff' ? (
+                      <Link
+                        href="/admin"
+                        className="mobile-auth-btn mobile-staff-btn"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        👔 Staff Portal
+                      </Link>
+                    ) : (
+                      <Link
+                        href="/account"
+                        className="mobile-auth-btn mobile-account-btn"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        👤 {userSession.fullName && !userSession.fullName.toLowerCase().includes('valued') ? userSession.fullName : 'My Account'}
+                      </Link>
+                    )}
+                    <button
+                      onClick={() => {
+                        handleLogout();
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className="mobile-logout-btn"
+                      title="Sign Out"
+                    >
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.4"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                        <polyline points="16 17 21 12 16 7" />
+                        <line x1="21" y1="12" x2="9" y2="12" />
+                      </svg>
+                      <span>Logout</span>
+                    </button>
+                  </div>
+                ) : (
+                  <Link
+                    href="/login"
+                    className="mobile-auth-btn mobile-login-btn"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    🔑 Sign In / Sign Up
+                  </Link>
+                )}
+              </div>
+
+              {/* Row 2: Direct Contact & WhatsApp Ordering (2-Column Grid) */}
+              <div className="mobile-contact-grid">
+                <a href="tel:8979319003" className="mobile-btn-call">
+                  <span>📞</span>
+                  <span>8979319003</span>
+                </a>
+                <a
+                  href="https://wa.me/918979319003?text=Namaste%2C%20I%20would%20like%20to%20order%20Saasu%20Maa%20Ka%20Achaar"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mobile-btn-whatsapp"
+                >
+                  <span>💬</span>
+                  <span>WhatsApp</span>
+                </a>
+              </div>
             </div>
           </div>
         )}

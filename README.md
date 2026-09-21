@@ -1,29 +1,31 @@
 # Saasu Maa Ka Achaar (सासू माँ का अचार)
 
-Official website and ordering platform for **Saasu Maa's Food** — traditional Indian homemade pickles prepared with 100% mustard oil, whole handpicked spices, and zero preservatives.
+Official web storefront and management platform for **Saasu Maa's Food** — handcrafted Indian homemade pickles prepared in traditional wood-pressed mustard oil with whole sun-dried spices and zero artificial preservatives.
 
 ---
 
 ## Features
 
-- **Interactive Product Catalog**: Real client product posters with dynamic size switching across **250g**, **500g**, and **1kg** jars.
-- **Official Rate Card & Price List**: Dedicated section displaying the authentic price list poster and interactive rate table.
-- **Real Kitchen Gallery**: Visual showcase of freshly packaged pickle jars straight from the kitchen.
-- **Direct WhatsApp & Phone Ordering**: One-tap pre-filled WhatsApp ordering and direct call booking (`+91 8979319003`).
-- **Mobile Optimized**: Clean, non-overflowing navbar with responsive slide-down menu.
-- **Dual-Tier Supabase Integration**:
-  - `anon` client for public browsing and order submissions (RLS enforced).
-  - `service_role` admin client for backend management and processing.
+- **Interactive Product Catalog**: Dynamic size switcher across **250g**, **500g**, and **1kg** variants with real-time price calculations and local basket management.
+- **Passwordless Email OTP Authentication**: Secure, one-time password login and signup powered by **Resend** transactional emails and **Supabase** profiles.
+- **Customer Account Portal**: Dedicated `/account` dashboard displaying member details, order shortcuts, and direct concierge links.
+- **Admin Management Console**: Dedicated `/admin` route featuring store KPIs, paginated orders management, inline status updates, and idempotent payment audit trails.
+- **Product Catalog & Pricing Editor**: Dedicated `/admin/products` suite to manage pickle varieties, bilingual Hindi/English names, real-time stock toggles, and dynamic pricing across 250g, 500g, and 1kg sizes.
+- **Cloudinary Image Management**: Automated jar photo uploads directly to Cloudinary with CDN delivery, auto-formatting, and dev base64 fallback.
+- **Official Rate Card & Price List**: Dedicated section displaying the authentic price poster and interactive pricing table.
+- **Direct WhatsApp & Phone Ordering**: One-click pre-filled WhatsApp checkout and direct phone booking (`+91 8979319003`).
+- **Comprehensive Local & Regional SEO**: JSON-LD structured data (`LocalBusiness`, `Product`, `BreadcrumbList`), Open Graph, Twitter Cards, automated `sitemap.xml`, and `robots.txt` optimized for Bareilly, Uttar Pradesh, and pan-India discovery.
 
 ---
 
 ## Tech Stack
 
-- **Framework**: Next.js (App Router)
-- **Database**: [Supabase](https://supabase.com/) (PostgreSQL with RLS)
-- **Frontend**: React (JavaScript), Vanilla CSS, HTML5
-- **Backend**: Next.js Server Route Handlers
-- **Package Manager**: npm
+- **Framework**: [Next.js 16](https://nextjs.org/) (App Router, React 19)
+- **Database**: [Supabase](https://supabase.com/) (PostgreSQL with Row Level Security)
+- **Email Service**: [Resend](https://resend.com/) for transactional 6-digit OTP delivery
+- **Media Storage**: [Cloudinary](https://cloudinary.com/) (v2 Node SDK) for product photo optimization and CDN delivery
+- **Styling**: Vanilla CSS with custom royal Indian design tokens
+- **Runtime**: Node.js
 
 ---
 
@@ -31,23 +33,40 @@ Official website and ordering platform for **Saasu Maa's Food** — traditional 
 
 ```
 ├── public/
-│   └── images/
-│       ├── products/        # Cropped product artworks (mango, lahsun, lal mirch, etc.)
-│       ├── brand-poster.png # High-res brand creative
-│       ├── price-list.png   # Official rate card poster
-│       └── real-jars.png    # Kitchen shelf packaging showcase
+│   ├── images/
+│   │   ├── products/        # Product creatives (mango, lahsun, lal mirch, etc.)
+│   │   ├── brand-poster.png # High-resolution brand artwork
+│   │   ├── price-list.png   # Official rate card poster
+│   │   └── real-jars.png    # Kitchen jars packaging showcase
+│   └── favicon.ico
 ├── src/
 │   ├── app/
+│   │   ├── account/         # Customer account dashboard
+│   │   ├── admin/           # Admin management console with paginated orders
+│   │   │   └── products/    # Product catalog, prices & Cloudinary photo editor
+│   │   ├── login/           # Email OTP login page
+│   │   ├── signup/          # Registration page with OTP verification
 │   │   ├── api/
-│   │   │   ├── orders/      # Backend route for order processing
-│   │   │   └── products/    # Backend route for catalog & pricing
-│   │   ├── globals.css      # Design tokens, catalog grid, & responsive styles
-│   │   ├── layout.js        # Root layout & SEO metadata
-│   │   └── page.js          # Interactive store, size selectors, & checkout
-│   └── lib/
-│       └── supabase/        # User client (anon) & admin client (service_role)
+│   │   │   ├── admin/       # Admin endpoints (paginated orders, stats, products, upload)
+│   │   │   ├── auth/        # Auth endpoints (send-otp, verify-otp, me, logout)
+│   │   │   ├── orders/      # Customer order placement & DB persistence
+│   │   │   └── products/    # Catalog pricing endpoint
+│   │   ├── globals.css      # Design tokens, catalog grid, auth & admin styles
+│   │   ├── layout.js        # Root layout, fonts, and global metadata
+│   │   ├── page.js          # Main storefront, catalog, and checkout modal
+│   │   ├── robots.js        # Robots.txt generator
+│   │   └── sitemap.js       # Dynamic sitemap generator
+│   ├── components/
+│   │   └── SpiroSpinner.js  # Torus spirograph geometric loading spinner
+│   ├── lib/
+│   │   ├── auth.js          # OTP generation, HMAC hashing, signed cookies
+│   │   ├── cloudinary.js    # Cloudinary v2 stream uploader & fallback
+│   │   ├── resend.js        # Resend email client & branded HTML template
+│   │   └── supabase/        # Public anon & admin service-role clients
+│   └── proxy.js             # Route proxy guarding /login and /signup from authenticated users
 ├── supabase/
-│   └── schema.sql           # Database schema & RLS policies
+│   ├── schema.sql           # Complete idempotent database schema with RLS & indexes
+│   └── auth_schema.sql      # Auth and payments migration add-on
 └── .env.example             # Environment variables template
 ```
 
@@ -57,24 +76,55 @@ Official website and ordering platform for **Saasu Maa's Food** — traditional 
 
 ### Prerequisites
 
-- Node.js (v18.18+ recommended)
-- npm
+- Node.js (v18.18+ or v20+)
+- npm or pnpm
 
-### Installation
+### 1. Installation
 
 ```bash
+git clone https://github.com/Focitech/Saasu-Maa-Ka-Achaar.git
+cd Saasu-Maa-Ka-Achaar
 npm install
 ```
 
-### Development Server
+### 2. Environment Variables
+
+Create a `.env` file in the root directory:
+
+```env
+# Supabase Configuration
+NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key
+
+# Resend Email Service
+RESEND_API_KEY=re_your_resend_api_key
+RESEND_FROM_EMAIL=Saasu Maa's Food <otp@saasumaasfood.site>
+
+# Session Secret (HMAC Signing)
+AUTH_SECRET=your-random-32-char-secret-string
+
+# Cloudinary (Product Jar Photo Uploads)
+CLOUDINARY_CLOUD_NAME=your-cloud-name
+CLOUDINARY_API_KEY=your-api-key
+CLOUDINARY_API_SECRET=your-api-secret
+```
+
+*Note: In local development without live keys, OTP codes are logged directly to the server terminal (`[DEV AUTH OTP]`) for immediate testing.*
+
+### 3. Database Setup
+
+Open the [Supabase SQL Editor](https://app.supabase.com/) and run the contents of [`supabase/schema.sql`](supabase/schema.sql). The script is completely idempotent with safe drop/create policy guards.
+
+### 4. Running Locally
 
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+Visit [http://localhost:3000](http://localhost:3000) to view the storefront, [http://localhost:3000/login](http://localhost:3000/login) for customer auth, or [http://localhost:3000/admin](http://localhost:3000/admin) for the management console.
 
-### Production Build
+### 5. Production Build
 
 ```bash
 npm run build
@@ -83,8 +133,9 @@ npm run start
 
 ---
 
-## Contact & Inquiries
+## Contact & Store Details
 
-- **Brand**: Saasu Maa's Food
+- **Kitchen Location**: Bareilly, Uttar Pradesh, India
 - **Phone / WhatsApp**: [+91 8979319003](tel:8979319003)
-- **DM for Booking**: 8979319003
+- **General Queries**: `query@saasumaasfood.site`
+- **Customer Support**: `support@saasumaasfood.site`

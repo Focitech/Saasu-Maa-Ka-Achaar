@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase';
+import { getSessionUser } from '@/lib/auth';
 
 export async function POST(request) {
   try {
@@ -13,6 +14,10 @@ export async function POST(request) {
       );
     }
 
+    const session = await getSessionUser();
+    const userId = session?.sub || body.userId || null;
+    const email = session?.email || body.email || null;
+
     const orderReference = `SM-${Date.now().toString().slice(-6)}`;
     const adminClient = getSupabaseAdmin();
 
@@ -24,6 +29,8 @@ export async function POST(request) {
           .insert([
             {
               order_reference: orderReference,
+              user_id: userId,
+              email: email,
               customer_name: name,
               phone,
               address: address || '',
