@@ -4,6 +4,7 @@
 - Contact Emails & Contact Section: `done`
 - SEO — Local & National Ranking: `done`
 - Email OTP Auth (Resend & Supabase): `done`
+- Password Auth (scrypt, strength validation, sanitization): `done`
 - Admin Management Console & Paginated Orders: `done`
 - Admin Product Catalog & Cloudinary Media: `done`
 
@@ -105,7 +106,28 @@
   - `NEXT_PUBLIC_SUPABASE_URL` / `SUPABASE_URL`
   - `SUPABASE_SERVICE_ROLE_KEY`
 - Known issues / TODO: None
-- Last changed: 2026-09-21 — removed slogan from navbar brand and implemented spirograph geometric torus loading animation
+- Last changed: 2026-09-22 — applied sanitizeInput/isValidEmail to send-otp and verify-otp API routes
+
+## Feature: Password Auth (scrypt, strength validation, sanitization)
+- Status: done
+- Purpose: Allow customers to log in with email+password as an alternative to OTP; strong password policy enforced
+- Files:
+  - `src/lib/auth.js` — `hashPassword`, `verifyPassword` (crypto.scrypt, timing-safe), `sanitizeInput`, `isValidEmail`, `validatePasswordStrength`
+  - `src/app/api/auth/login-password/route.js` — POST endpoint: sanitizes inputs, verifies password hash, issues session cookie
+  - `src/app/api/auth/set-password/route.js` — POST endpoint (auth required): validates strength, hashes and stores password
+  - `src/app/login/page.js` — two-tab UI: OTP mode and Password mode with strength bar, show/hide toggle
+  - `supabase/password_migration.sql` — idempotent: adds `password_hash text` column to `public.profiles`
+- Behavior / key decisions:
+  - Hashing: `crypto.scrypt` (Node built-in, no extra deps); format `scrypt$salt$hash`; timing-safe comparison via `crypto.timingSafeEqual`
+  - Password policy: min 8 chars, 1 uppercase, 1 lowercase, 1 digit, 1 special char — enforced server-side and shown live on client
+  - Sanitization: `sanitizeInput` strips HTML tags and control chars; applied to all auth API routes (send-otp, verify-otp, login-password, set-password)
+  - User enumeration prevention: identical error message for unknown email and wrong password
+  - OTP-only accounts: if `password_hash` is null during password login, the backend automatically dispatches an OTP verification code via Resend and signals `needsPasswordSetup: true`. The UI transitions to the 6-digit OTP verification grid (`verify-otp` step). Once OTP is verified, the session is created and the user moves to the password creation step (`create` step) to set a password via session-authenticated `/api/auth/set-password`.
+  - Idempotency: password update uses atomic `UPDATE profiles SET password_hash WHERE id`
+- Config / env: None (uses existing AUTH_SECRET indirectly via session)
+- Known issues / TODO:
+  - Add "Forgot Password" flow (OTP-based password reset using `purpose: 'reset'`)
+- Last changed: 2026-09-22 — implemented 3-step OTP verification before password creation for OTP-only accounts
 
 ## Feature: Admin Management Console & Paginated Orders
 - Status: done

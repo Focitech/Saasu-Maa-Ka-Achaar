@@ -7,7 +7,7 @@ Official web storefront and management platform for **Saasu Maa's Food** — han
 ## Features
 
 - **Interactive Product Catalog**: Dynamic size switcher across **250g**, **500g**, and **1kg** variants with real-time price calculations and local basket management.
-- **Passwordless Email OTP Authentication**: Secure, one-time password login and signup powered by **Resend** transactional emails and **Supabase** profiles.
+- **Dual Authentication (Password & Email OTP)**: Secure login supporting both email OTP and strong password authentication (`crypto.scrypt` hashing with per-user salt and timing-safe verification), with automatic OTP identity verification for OTP-created accounts setting up their first password.
 - **Customer Account Portal**: Dedicated `/account` dashboard displaying member details, order shortcuts, and direct concierge links.
 - **Admin Management Console**: Dedicated `/admin` route featuring store KPIs, paginated orders management, inline status updates, and idempotent payment audit trails.
 - **Product Catalog & Pricing Editor**: Dedicated `/admin/products` suite to manage pickle varieties, bilingual Hindi/English names, real-time stock toggles, and dynamic pricing across 250g, 500g, and 1kg sizes.

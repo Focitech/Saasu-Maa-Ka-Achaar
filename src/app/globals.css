@@ -3529,3 +3529,41 @@ body {
 }
 
 
+
+/* -- Password Setup Notice banner ----------------------------------------- */
+.pw-setup-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: linear-gradient(135deg, rgba(37,99,235,0.15) 0%, rgba(99,102,241,0.12) 100%);
+  border: 1px solid rgba(99,102,241,0.35);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 20px;
+}
+
+.pw-setup-notice-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.pw-setup-notice strong {
+  display: block;
+  color: #c7d2fe;
+  font-size: 0.92rem;
+  margin-bottom: 4px;
+}
+
+.pw-setup-notice p {
+  color: rgba(255,255,255,0.6);
+  font-size: 0.8rem;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.pw-setup-notice em {
+  color: #818cf8;
+  font-style: normal;
+  font-weight: 600;
+}

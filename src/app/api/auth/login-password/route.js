@@ -3,9 +3,12 @@ import {
   sanitizeInput,
   isValidEmail,
   verifyPassword,
+  generateOtp,
+  saveOtp,
   createSessionToken,
   setSessionCookie,
 } from "@/lib/auth";
+import { sendOtpEmail } from "@/lib/resend";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 
 export async function POST(request) {
@@ -44,10 +47,36 @@ export async function POST(request) {
     }
 
     if (!user.password_hash) {
-      return NextResponse.json(
-        { error: "This account uses OTP login. Please use the Sign in with OTP method." },
-        { status: 400 }
-      );
+      // User signed up via OTP and hasn't created a password yet.
+      // Automatically send OTP to verify their identity before allowing password setup.
+      const otp = generateOtp();
+      const saveResult = await saveOtp({ email: user.email, otp, purpose: "login" });
+
+      if (!saveResult.success) {
+        if (saveResult.cooldown) {
+          return NextResponse.json({
+            needsPasswordSetup: true,
+            cooldown: true,
+            remainingSeconds: saveResult.remainingSeconds,
+            email: user.email,
+            message: `Please enter the 6-digit code sent to ${user.email} to verify your identity.`,
+          });
+        }
+        return NextResponse.json({ error: saveResult.error || "Failed to generate verification code." }, { status: 500 });
+      }
+
+      const emailResult = await sendOtpEmail({ email: user.email, otp, purpose: "login" });
+      if (!emailResult.success) {
+        return NextResponse.json({ error: emailResult.error || "Failed to deliver verification email." }, { status: 500 });
+      }
+
+      return NextResponse.json({
+        needsPasswordSetup: true,
+        otpSent: true,
+        email: user.email,
+        cooldownSeconds: 60,
+        message: `Your account was created via OTP. We sent a 6-digit verification code to ${user.email}. Verify it to set your password.`,
+      });
     }
 
     const passwordMatch = await verifyPassword(password, user.password_hash);

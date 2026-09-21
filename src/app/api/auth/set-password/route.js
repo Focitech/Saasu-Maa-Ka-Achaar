@@ -45,7 +45,17 @@ export async function POST(request) {
       return NextResponse.json({ error: "Failed to update password. Please try again." }, { status: 500 });
     }
 
-    return NextResponse.json({ success: true, message: "Password set successfully." });
+    return NextResponse.json({
+      success: true,
+      message: "Password set successfully.",
+      user: {
+        id: session.sub,
+        email: session.email,
+        fullName: session.fullName,
+        phone: session.phone,
+        role: session.role,
+      },
+    });
   } catch (err) {
     console.error("[Set Password Error]", err);
     return NextResponse.json({ error: "An unexpected error occurred." }, { status: 500 });

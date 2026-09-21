@@ -78,8 +78,14 @@ function LoginForm() {
   const inputRefs = useRef([]);
 
   // Password mode state
+  const [pwStep, setPwStep] = useState("enter"); // "enter" | "verify-otp" | "create"
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [pwOtpDigits, setPwOtpDigits] = useState(["", "", "", "", "", ""]);
+  const pwOtpRefs = useRef([]);
+  const [verifiedUser, setVerifiedUser] = useState(null);
 
   // ── Cooldown timer ────────────────────────────────────────────────────────
   useEffect(() => {
@@ -137,6 +143,10 @@ function LoginForm() {
     setStep("email");
     setOtpDigits(["", "", "", "", "", ""]);
     setPassword("");
+    setConfirmPassword("");
+    setPwOtpDigits(["", "", "", "", "", ""]);
+    setPwStep("enter");
+    setVerifiedUser(null);
   };
 
   // ── Shared post-login handler ─────────────────────────────────────────────
@@ -250,8 +260,154 @@ function LoginForm() {
         body: JSON.stringify({ email: cleanEmail, password: cleanPwd }),
       });
       const data = await res.json();
-      if (!res.ok) { setErrorMsg(data.error || "Login failed. Please try again."); setIsLoading(false); return; }
+
+      // OTP-only account detected: OTP was dispatched to email. Transition to verify-otp step.
+      if (data.needsPasswordSetup) {
+        setPassword("");
+        setConfirmPassword("");
+        setPwOtpDigits(["", "", "", "", "", ""]);
+        setPwStep("verify-otp");
+        if (data.cooldown) {
+          setCooldown(data.remainingSeconds || 60);
+          setSuccessMsg(data.message || `Your account was created via OTP. Enter the 6-digit code sent to ${cleanEmail} to set a password.`);
+        } else {
+          setCooldown(data.cooldownSeconds || 60);
+          setSuccessMsg(data.message || `Your account was created via OTP. We sent a 6-digit verification code to ${cleanEmail}. Verify it to create your password.`);
+        }
+        setIsLoading(false);
+        setTimeout(() => pwOtpRefs.current[0]?.focus(), 100);
+        return;
+      }
+
+      if (!res.ok) {
+        setErrorMsg(data.error || "Login failed. Please try again.");
+        setIsLoading(false);
+        return;
+      }
       onLoginSuccess(data.user);
+    } catch {
+      setErrorMsg("Network error. Please check your internet connection.");
+      setIsLoading(false);
+    }
+  };
+
+  // ── Password mode: OTP verification for OTP-only accounts ─────────────────
+  const handlePwOtpChange = (index, value) => {
+    if (!/^\d*$/.test(value)) return;
+    const newDigits = [...pwOtpDigits];
+    newDigits[index] = value.slice(-1);
+    setPwOtpDigits(newDigits);
+    setErrorMsg("");
+    if (value && index < 5) pwOtpRefs.current[index + 1]?.focus();
+    const combined = newDigits.join("");
+    if (combined.length === 6) handleVerifyPwOtp(combined);
+  };
+
+  const handlePwKeyDown = (index, e) => {
+    if (e.key === "Backspace" && !pwOtpDigits[index] && index > 0)
+      pwOtpRefs.current[index - 1]?.focus();
+  };
+
+  const handlePwPaste = (e) => {
+    e.preventDefault();
+    const paste = e.clipboardData.getData("text").trim();
+    if (/^\d{6}$/.test(paste)) {
+      const s = paste.split("");
+      setPwOtpDigits(s);
+      handleVerifyPwOtp(paste);
+    }
+  };
+
+  const handleResendPwOtp = async () => {
+    const cleanEmail = sanitize(email).toLowerCase();
+    setIsLoading(true);
+    setErrorMsg("");
+    try {
+      const res = await fetch("/api/auth/send-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: cleanEmail, purpose: "login" }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        if (data.cooldown) { setCooldown(data.remainingSeconds || 60); }
+        setErrorMsg(data.error || "Failed to resend verification code.");
+        return;
+      }
+      setSuccessMsg(`A fresh 6-digit code has been sent to ${cleanEmail}`);
+      setCooldown(data.cooldownSeconds || 60);
+      setPwOtpDigits(["", "", "", "", "", ""]);
+      setTimeout(() => pwOtpRefs.current[0]?.focus(), 100);
+    } catch {
+      setErrorMsg("Network error. Please check your connection.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleVerifyPwOtp = async (codeToVerify) => {
+    const code = codeToVerify || pwOtpDigits.join("");
+    if (code.length !== 6) {
+      setErrorMsg("Please enter the full 6-digit code.");
+      return;
+    }
+    setIsLoading(true);
+    setErrorMsg("");
+    try {
+      const res = await fetch("/api/auth/verify-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: sanitize(email).toLowerCase(), otp: code, purpose: "login" }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setErrorMsg(data.error || "Verification failed. Please check the code and try again.");
+        setIsLoading(false);
+        return;
+      }
+      // OTP verified successfully! Active session cookie is now set.
+      setVerifiedUser(data.user);
+      setPwStep("create");
+      setPassword("");
+      setConfirmPassword("");
+      setErrorMsg("");
+      setSuccessMsg("Identity verified! Now create a password for your account.");
+    } catch {
+      setErrorMsg("Network error. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // ── Setup password for verified OTP-only accounts ────────────────────────
+  const handleSetupPassword = async (e) => {
+    e.preventDefault();
+    const cleanPwd = sanitize(password);
+    const cleanConfirm = sanitize(confirmPassword);
+    if (!cleanPwd || cleanPwd.length < 8) {
+      setErrorMsg("Password must be at least 8 characters.");
+      return;
+    }
+    if (cleanPwd !== cleanConfirm) {
+      setErrorMsg("Passwords do not match.");
+      return;
+    }
+    setIsLoading(true);
+    setErrorMsg("");
+    setSuccessMsg("");
+    try {
+      const res = await fetch("/api/auth/set-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password: cleanPwd, confirmPassword: cleanConfirm }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setErrorMsg(data.error || "Failed to set password. Please try again.");
+        setIsLoading(false);
+        return;
+      }
+      onLoginSuccess(verifiedUser || { email: sanitize(email).toLowerCase() });
     } catch {
       setErrorMsg("Network error. Please try again.");
       setIsLoading(false);
@@ -390,70 +546,247 @@ function LoginForm() {
 
           {/* ── Password Mode ── */}
           {mode === "password" && (
-            <form onSubmit={handlePasswordLogin} className="auth-form">
-              <div className="auth-field-group">
-                <label htmlFor="pw-email" className="auth-label">
-                  Email Address <span className="auth-required">*</span>
-                </label>
-                <div className="auth-input-wrap">
-                  <span className="auth-input-icon">✉️</span>
-                  <input
-                    id="pw-email"
-                    type="email"
-                    required
-                    placeholder="e.g. yourname@gmail.com"
-                    value={email}
-                    onChange={(e) => { setEmail(sanitize(e.target.value)); setErrorMsg(""); }}
-                    className="auth-input"
-                    disabled={isLoading}
-                    autoComplete="email"
-                    autoFocus
-                  />
-                </div>
-              </div>
+            <>
+              {pwStep === "enter" && (
+                /* Step 1: Normal sign-in form */
+                <form onSubmit={handlePasswordLogin} className="auth-form">
+                  <div className="auth-field-group">
+                    <label htmlFor="pw-email" className="auth-label">
+                      Email Address <span className="auth-required">*</span>
+                    </label>
+                    <div className="auth-input-wrap">
+                      <span className="auth-input-icon">✉️</span>
+                      <input
+                        id="pw-email"
+                        type="email"
+                        required
+                        placeholder="e.g. yourname@gmail.com"
+                        value={email}
+                        onChange={(e) => { setEmail(sanitize(e.target.value)); setErrorMsg(""); }}
+                        className="auth-input"
+                        disabled={isLoading}
+                        autoComplete="email"
+                        autoFocus
+                      />
+                    </div>
+                  </div>
 
-              <div className="auth-field-group">
-                <label htmlFor="pw-password" className="auth-label">
-                  Password <span className="auth-required">*</span>
-                </label>
-                <div className="auth-input-wrap">
-                  <span className="auth-input-icon">🔒</span>
-                  <input
-                    id="pw-password"
-                    type={showPassword ? "text" : "password"}
-                    required
-                    placeholder="Enter your password"
-                    value={password}
-                    onChange={(e) => { setPassword(e.target.value); setErrorMsg(""); }}
-                    className="auth-input"
-                    disabled={isLoading}
-                    autoComplete="current-password"
-                  />
+                  <div className="auth-field-group">
+                    <label htmlFor="pw-password" className="auth-label">
+                      Password <span className="auth-required">*</span>
+                    </label>
+                    <div className="auth-input-wrap">
+                      <span className="auth-input-icon">🔒</span>
+                      <input
+                        id="pw-password"
+                        type={showPassword ? "text" : "password"}
+                        required
+                        placeholder="Enter your password"
+                        value={password}
+                        onChange={(e) => { setPassword(e.target.value); setErrorMsg(""); }}
+                        className="auth-input"
+                        disabled={isLoading}
+                        autoComplete="current-password"
+                      />
+                      <button type="button" className="pwd-toggle-btn" onClick={() => setShowPassword((p) => !p)} tabIndex={-1} aria-label={showPassword ? "Hide password" : "Show password"}>
+                        {showPassword ? "🙈" : "👁️"}
+                      </button>
+                    </div>
+                  </div>
+
+                  <button type="submit" id="pw-login-btn" className="auth-submit-btn primary-btn" disabled={isLoading}>
+                    {isLoading ? <span className="auth-spinner-wrap"><span className="auth-spinner" /> Signing In...</span> : "Sign In ➔"}
+                  </button>
+
+                  <p className="auth-hint-text">
+                    Don&apos;t have a password yet?{" "}
+                    <button type="button" className="auth-text-link-btn inline" onClick={() => switchMode("otp")}>
+                      Log in with OTP instead
+                    </button>
+                  </p>
+                </form>
+              )}
+
+              {pwStep === "verify-otp" && (
+                /* Step 2: OTP Verification for OTP-only accounts */
+                <div className="auth-otp-step">
+                  <div className="pw-setup-notice" style={{ marginBottom: "20px" }}>
+                    <span className="pw-setup-notice-icon">✉️</span>
+                    <div>
+                      <strong>Verify Your Identity</strong>
+                      <p>
+                        Your account <em>{email}</em> was registered with OTP. Please enter the 6-digit code sent to your email to verify your identity before creating a password.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="otp-inputs-grid" onPaste={handlePwPaste}>
+                    {pwOtpDigits.map((digit, idx) => (
+                      <input
+                        key={idx}
+                        ref={(el) => (pwOtpRefs.current[idx] = el)}
+                        type="text"
+                        inputMode="numeric"
+                        maxLength={1}
+                        value={digit}
+                        onChange={(e) => handlePwOtpChange(idx, e.target.value)}
+                        onKeyDown={(e) => handlePwKeyDown(idx, e)}
+                        className="otp-digit-input"
+                        disabled={isLoading}
+                        autoFocus={idx === 0}
+                      />
+                    ))}
+                  </div>
+
                   <button
                     type="button"
-                    className="pwd-toggle-btn"
-                    onClick={() => setShowPassword((p) => !p)}
-                    tabIndex={-1}
-                    aria-label={showPassword ? "Hide password" : "Show password"}
+                    id="pw-verify-otp-btn"
+                    onClick={() => handleVerifyPwOtp()}
+                    className="auth-submit-btn primary-btn"
+                    disabled={isLoading || pwOtpDigits.join("").length !== 6}
                   >
-                    {showPassword ? "🙈" : "👁️"}
+                    {isLoading ? (
+                      <span className="auth-spinner-wrap"><span className="auth-spinner" /> Verifying...</span>
+                    ) : (
+                      "Verify OTP & Continue ➔"
+                    )}
                   </button>
+
+                  <div className="otp-actions-bar">
+                    {cooldown > 0 ? (
+                      <span className="otp-cooldown-text">
+                        Resend code in <strong>{cooldown}s</strong>
+                      </span>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={handleResendPwOtp}
+                        className="auth-text-link-btn"
+                        disabled={isLoading}
+                      >
+                        🔄 Resend Code
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setPwStep("enter");
+                        setErrorMsg("");
+                        setSuccessMsg("");
+                      }}
+                      className="auth-text-link-btn"
+                    >
+                      ← Back
+                    </button>
+                  </div>
                 </div>
-                <StrengthBar password={password} />
-              </div>
+              )}
 
-              <button type="submit" id="pw-login-btn" className="auth-submit-btn primary-btn" disabled={isLoading}>
-                {isLoading ? <span className="auth-spinner-wrap"><span className="auth-spinner" /> Signing In...</span> : "Sign In ➔"}
-              </button>
+              {pwStep === "create" && (
+                /* Step 3: Create password step — after OTP is verified */
+                <form onSubmit={handleSetupPassword} className="auth-form">
+                  <div className="pw-setup-notice">
+                    <span className="pw-setup-notice-icon">🔑</span>
+                    <div>
+                      <strong>Create Your Password</strong>
+                      <p>
+                        Identity verified! Set a password for <em>{email}</em> so you can sign in with your password anytime.
+                      </p>
+                    </div>
+                  </div>
 
-              <p className="auth-hint-text">
-                Don&apos;t have a password yet?{" "}
-                <button type="button" className="auth-text-link-btn inline" onClick={() => switchMode("otp")}>
-                  Log in with OTP instead
-                </button>
-              </p>
-            </form>
+                  <div className="auth-field-group">
+                    <label htmlFor="new-password" className="auth-label">
+                      New Password <span className="auth-required">*</span>
+                    </label>
+                    <div className="auth-input-wrap">
+                      <span className="auth-input-icon">🔒</span>
+                      <input
+                        id="new-password"
+                        type={showPassword ? "text" : "password"}
+                        required
+                        placeholder="Min 8 chars, uppercase, number, symbol"
+                        value={password}
+                        onChange={(e) => { setPassword(e.target.value); setErrorMsg(""); }}
+                        className="auth-input"
+                        disabled={isLoading}
+                        autoComplete="new-password"
+                        autoFocus
+                      />
+                      <button
+                        type="button"
+                        className="pwd-toggle-btn"
+                        onClick={() => setShowPassword((p) => !p)}
+                        tabIndex={-1}
+                        aria-label={showPassword ? "Hide" : "Show"}
+                      >
+                        {showPassword ? "🙈" : "👁️"}
+                      </button>
+                    </div>
+                    <StrengthBar password={password} />
+                  </div>
+
+                  <div className="auth-field-group">
+                    <label htmlFor="confirm-password" className="auth-label">
+                      Confirm Password <span className="auth-required">*</span>
+                    </label>
+                    <div className="auth-input-wrap">
+                      <span className="auth-input-icon">✅</span>
+                      <input
+                        id="confirm-password"
+                        type={showConfirmPassword ? "text" : "password"}
+                        required
+                        placeholder="Re-enter your password"
+                        value={confirmPassword}
+                        onChange={(e) => { setConfirmPassword(e.target.value); setErrorMsg(""); }}
+                        className="auth-input"
+                        disabled={isLoading}
+                        autoComplete="new-password"
+                      />
+                      <button
+                        type="button"
+                        className="pwd-toggle-btn"
+                        onClick={() => setShowConfirmPassword((p) => !p)}
+                        tabIndex={-1}
+                        aria-label={showConfirmPassword ? "Hide" : "Show"}
+                      >
+                        {showConfirmPassword ? "🙈" : "👁️"}
+                      </button>
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    id="setup-password-btn"
+                    className="auth-submit-btn primary-btn"
+                    disabled={isLoading}
+                  >
+                    {isLoading ? (
+                      <span className="auth-spinner-wrap"><span className="auth-spinner" /> Setting Password...</span>
+                    ) : (
+                      "Set Password & Complete Login ➔"
+                    )}
+                  </button>
+
+                  <button
+                    type="button"
+                    className="auth-text-link-btn"
+                    style={{ textAlign: "center", marginTop: "8px" }}
+                    onClick={() => {
+                      setPwStep("enter");
+                      setPassword("");
+                      setConfirmPassword("");
+                      setErrorMsg("");
+                      setSuccessMsg("");
+                    }}
+                  >
+                    ← Cancel
+                  </button>
+                </form>
+              )}
+            </>
           )}
+
 
           {/* Card Footer */}
           <div className="auth-card-footer">
