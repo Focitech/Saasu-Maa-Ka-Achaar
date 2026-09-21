@@ -943,12 +943,226 @@ body {
   font-size: 0.9rem;
 }
 
+/* Contact Us Section */
+.contact-us-section {
+  background: linear-gradient(160deg, #fff9f0 0%, #fdf5e9 100%);
+  padding: 90px 0 80px;
+  border-top: 1px solid var(--border-gold);
+}
+
+.contact-header {
+  text-align: center;
+  margin-bottom: 52px;
+}
+
+.contact-heading {
+  font-family: var(--font-heading);
+  font-size: 2.4rem;
+  color: var(--primary-deep);
+  margin: 8px 0 14px;
+}
+
+.contact-subtext {
+  color: var(--muted-text);
+  font-size: 1.05rem;
+  max-width: 560px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+/* Email Cards */
+.contact-email-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-bottom: 60px;
+}
+
+.email-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background: #ffffff;
+  border: 1.5px solid var(--border-gold);
+  border-radius: var(--radius-md);
+  padding: 28px 18px 22px;
+  text-decoration: none;
+  color: var(--dark-text);
+  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.email-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--gold-accent);
+}
+
+.email-card-wide {
+  grid-column: span 4;
+  flex-direction: row;
+  gap: 24px;
+  justify-content: center;
+  padding: 22px 32px;
+  background: linear-gradient(135deg, var(--primary-deep) 0%, var(--primary-maroon) 100%);
+  color: #ffffff;
+  border-color: var(--gold-accent);
+}
+
+.email-card-wide .email-card-label {
+  color: var(--gold-light);
+}
+
+.email-card-wide .email-card-name {
+  color: #ffffff;
+}
+
+.email-card-wide .email-card-address {
+  color: var(--gold-light);
+}
+
+.email-card-icon {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.email-card-wide .email-card-icon {
+  margin-bottom: 0;
+  font-size: 2.2rem;
+}
+
+.email-card-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--muted-text);
+  margin-bottom: 4px;
+}
+
+.email-card-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--primary-deep);
+  margin-bottom: 6px;
+}
+
+.email-card-address {
+  font-size: 0.82rem;
+  color: var(--primary-maroon);
+  word-break: break-all;
+  font-weight: 500;
+}
+
+/* Contact Form */
+.contact-form-wrap {
+  background: #ffffff;
+  border: 1.5px solid var(--border-gold);
+  border-radius: var(--radius-lg);
+  padding: 44px 48px;
+  box-shadow: var(--shadow-md);
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.contact-form-title {
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  color: var(--primary-deep);
+  margin-bottom: 28px;
+  text-align: center;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.cf-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.cf-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cf-field label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--dark-text);
+}
+
+.cf-field input,
+.cf-field textarea,
+.cf-field select {
+  padding: 11px 14px;
+  border: 1.5px solid var(--border-gold);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--dark-text);
+  background: #fdfaf5;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cf-field input:focus,
+.cf-field textarea:focus,
+.cf-field select:focus {
+  border-color: var(--gold-accent);
+  box-shadow: 0 0 0 3px rgba(201, 147, 59, 0.12);
+}
+
+.cf-field select {
+  cursor: pointer;
+}
+
+.cf-submit {
+  align-self: flex-start;
+  margin-top: 4px;
+}
+
+@media (max-width: 960px) {
+  .contact-email-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .email-card-wide {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 600px) {
+  .contact-email-grid {
+    grid-template-columns: 1fr;
+  }
+  .email-card-wide {
+    grid-column: span 1;
+    flex-direction: column;
+  }
+  .cf-row {
+    grid-template-columns: 1fr;
+  }
+  .contact-form-wrap {
+    padding: 28px 18px;
+  }
+  .contact-heading {
+    font-size: 1.7rem;
+  }
+}
+
 /* Footer */
 .footer {
   background: var(--primary-deep);
   color: #f7e6e8;
   padding: 60px 0 24px;
 }
+
 
 .footer-grid {
   display: grid;
@@ -1000,6 +1214,12 @@ body {
   font-size: 0.9rem;
   color: #d1b8b8;
   margin-bottom: 8px;
+}
+
+.footer-cities {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 18px;
+  margin-bottom: 16px;
 }
 
 .footer-bottom {

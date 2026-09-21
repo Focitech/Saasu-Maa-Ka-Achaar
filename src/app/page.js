@@ -217,7 +217,181 @@ export default function Home() {
 
   return (
     <>
+      {/* JSON-LD Structured Data — LocalBusiness + Products */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@graph": [
+              {
+                "@type": ["LocalBusiness", "FoodEstablishment", "Store"],
+                "@id": "https://saasumaasfood.site/#business",
+                "name": "Saasu Maa Ka Achaar",
+                "alternateName": ["सासू माँ का अचार", "Saasu Maa's Food", "Saasu Maa Achar Bareilly"],
+                "description": "Best homemade achar (Indian pickles) in Bareilly, Uttar Pradesh. Made with pure wood-pressed mustard oil, traditional recipes, zero preservatives. Aam, Lahsun, Nimbu, Hari Mirch, Karonda and more. Pan-India delivery.",
+                "url": "https://saasumaasfood.site",
+                "logo": "https://saasumaasfood.site/images/logo.jpg",
+                "image": ["https://saasumaasfood.site/images/brand-poster.png", "https://saasumaasfood.site/images/real-jars.png"],
+                "telephone": "+918979319003",
+                "email": "query@saasumaasfood.site",
+                "address": {
+                  "@type": "PostalAddress",
+                  "addressLocality": "Bareilly",
+                  "addressRegion": "Uttar Pradesh",
+                  "postalCode": "243001",
+                  "addressCountry": "IN"
+                },
+                "geo": {
+                  "@type": "GeoCoordinates",
+                  "latitude": 28.3670,
+                  "longitude": 79.4304
+                },
+                "areaServed": [
+                  { "@type": "City", "name": "Bareilly" },
+                  { "@type": "City", "name": "Lucknow" },
+                  { "@type": "City", "name": "Kanpur" },
+                  { "@type": "City", "name": "Agra" },
+                  { "@type": "City", "name": "Prayagraj" },
+                  { "@type": "City", "name": "Varanasi" },
+                  { "@type": "City", "name": "Meerut" },
+                  { "@type": "City", "name": "Moradabad" },
+                  { "@type": "City", "name": "Aligarh" },
+                  { "@type": "City", "name": "Mathura" },
+                  { "@type": "City", "name": "Rampur" },
+                  { "@type": "City", "name": "Shahjahanpur" },
+                  { "@type": "State", "name": "Uttar Pradesh" },
+                  { "@type": "Country", "name": "India" }
+                ],
+                "servesCuisine": ["Indian", "North Indian", "Pickle", "Achaar"],
+                "priceRange": "₹85 - ₹460",
+                "paymentAccepted": ["Cash", "UPI", "Bank Transfer"],
+                "currenciesAccepted": "INR",
+                "openingHoursSpecification": {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+                  "opens": "09:00",
+                  "closes": "21:00"
+                },
+                "contactPoint": [
+                  {
+                    "@type": "ContactPoint",
+                    "telephone": "+918979319003",
+                    "contactType": "customer service",
+                    "areaServed": "IN",
+                    "availableLanguage": ["Hindi", "English"],
+                    "contactOption": "TollFree"
+                  },
+                  {
+                    "@type": "ContactPoint",
+                    "email": "support@saasumaasfood.site",
+                    "contactType": "customer support",
+                    "areaServed": "IN"
+                  }
+                ],
+                "sameAs": [
+                  "https://wa.me/918979319003"
+                ],
+                "hasOfferCatalog": {
+                  "@type": "OfferCatalog",
+                  "name": "Homemade Achaar Varieties",
+                  "itemListElement": [
+                    {
+                      "@type": "Offer",
+                      "itemOffered": {
+                        "@type": "Product",
+                        "name": "Mango Pickle (Aam Ka Achaar)",
+                        "description": "Desi Ramkela mangoes marinated in pure wood-pressed mustard oil with roasted fenugreek and fennel. Best mango pickle in Bareilly.",
+                        "image": "https://saasumaasfood.site/images/products/mango.png",
+                        "brand": { "@type": "Brand", "name": "Saasu Maa Ka Achaar" },
+                        "offers": [
+                          { "@type": "Offer", "price": "85", "priceCurrency": "INR", "name": "250g" },
+                          { "@type": "Offer", "price": "150", "priceCurrency": "INR", "name": "500g" },
+                          { "@type": "Offer", "price": "290", "priceCurrency": "INR", "name": "1kg" }
+                        ]
+                      }
+                    },
+                    {
+                      "@type": "Offer",
+                      "itemOffered": {
+                        "@type": "Product",
+                        "name": "Lahsun Achaar (Garlic Pickle)",
+                        "description": "Whole peeled desi garlic cloves sautéed and pickled in crushed red chilli and mustard gravy.",
+                        "image": "https://saasumaasfood.site/images/products/lahsun.png",
+                        "brand": { "@type": "Brand", "name": "Saasu Maa Ka Achaar" },
+                        "offers": [
+                          { "@type": "Offer", "price": "120", "priceCurrency": "INR", "name": "250g" },
+                          { "@type": "Offer", "price": "235", "priceCurrency": "INR", "name": "500g" },
+                          { "@type": "Offer", "price": "460", "priceCurrency": "INR", "name": "1kg" }
+                        ]
+                      }
+                    },
+                    {
+                      "@type": "Offer",
+                      "itemOffered": {
+                        "@type": "Product",
+                        "name": "Hari Mirch Achaar (Green Chilli Pickle)",
+                        "description": "Farm-fresh slit green chillies packed with coarse mustard seeds and tangy amchur.",
+                        "image": "https://saasumaasfood.site/images/products/hari-mirch.png",
+                        "brand": { "@type": "Brand", "name": "Saasu Maa Ka Achaar" }
+                      }
+                    },
+                    {
+                      "@type": "Offer",
+                      "itemOffered": {
+                        "@type": "Product",
+                        "name": "Nimbu Achaar (Lemon Pickle)",
+                        "description": "Traditional sun-dried lemon wedges with pure mustard oil and whole spices.",
+                        "image": "https://saasumaasfood.site/images/products/lemon.png",
+                        "brand": { "@type": "Brand", "name": "Saasu Maa Ka Achaar" }
+                      }
+                    },
+                    {
+                      "@type": "Offer",
+                      "itemOffered": {
+                        "@type": "Product",
+                        "name": "Karonda Achaar",
+                        "description": "Seasonal wild cranberries with green chillies — sour-spicy explosion. Specialty of Bareilly region.",
+                        "image": "https://saasumaasfood.site/images/products/karonda.png",
+                        "brand": { "@type": "Brand", "name": "Saasu Maa Ka Achaar" }
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "@type": "WebSite",
+                "@id": "https://saasumaasfood.site/#website",
+                "url": "https://saasumaasfood.site",
+                "name": "Saasu Maa Ka Achaar",
+                "description": "Best homemade achar in Bareilly, UP. Order online.",
+                "publisher": { "@id": "https://saasumaasfood.site/#business" },
+                "inLanguage": ["hi-IN", "en-IN"],
+                "potentialAction": {
+                  "@type": "SearchAction",
+                  "target": {
+                    "@type": "EntryPoint",
+                    "urlTemplate": "https://saasumaasfood.site/?q={search_term_string}"
+                  },
+                  "query-input": "required name=search_term_string"
+                }
+              },
+              {
+                "@type": "BreadcrumbList",
+                "itemListElement": [
+                  { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://saasumaasfood.site" },
+                  { "@type": "ListItem", "position": 2, "name": "Pickle Varieties", "item": "https://saasumaasfood.site/#varieties" },
+                  { "@type": "ListItem", "position": 3, "name": "Price List", "item": "https://saasumaasfood.site/#price-list" },
+                  { "@type": "ListItem", "position": 4, "name": "Contact", "item": "https://saasumaasfood.site/#contact-section" }
+                ]
+              }
+            ]
+          })
+        }}
+      />
+
       {/* Top Brand Announcement */}
+
       <div className="top-announcement-bar">
         <span>BRAND- Saasu Maa&apos;s Food | Homemade Achar | Maa ke haath ka swaad 💗 | 100% Mustard Oil | No Preservatives | 💌 DM for booking or </span>
         <a href="https://wa.me/918979319003?text=Namaste%2C%20I%20would%20like%20to%20order%20Saasu%20Maa%20Ka%20Achaar" target="_blank" rel="noopener noreferrer">8979319003</a>
@@ -568,7 +742,7 @@ export default function Home() {
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '26px' }}>
                 <div>✓ <strong>100% Home Made with Hygiene</strong></div>
                 <div>✓ <strong>No Palm Oil • No Chemical Preservatives</strong></div>
-                <div>✓ <strong>Available in Premium Sealed Barnis & Jars</strong></div>
+                <div>✓ <strong>Available in Premium Sealed Barnis &amp; Jars</strong></div>
                 <div>✓ <strong>Fast Delivery Across India</strong></div>
               </div>
               <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
@@ -590,7 +764,7 @@ export default function Home() {
               <span className="section-subtag">The Journey</span>
               <h2>सासू माँ के हाथों का स्वाद, प्यार हर बार</h2>
               <p>
-                Every spoonful of Saasu Maa Ka Achaar holds the warmth of a mother’s kitchen.
+                Every spoonful of Saasu Maa Ka Achaar holds the warmth of a mother&apos;s kitchen.
                 Started as a family legacy in making traditional pickles for relatives and festive gatherings,
                 we continue to prepare small batches with pristine hygiene and time-tested recipes.
               </p>
@@ -601,7 +775,7 @@ export default function Home() {
               <div className="about-stats">
                 <div className="stat-card">
                   <div className="stat-number">100%</div>
-                  <div className="stat-label">Natural & Desi</div>
+                  <div className="stat-label">Natural &amp; Desi</div>
                 </div>
                 <div className="stat-card">
                   <div className="stat-number">10+</div>
@@ -624,7 +798,109 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        {/* Contact Us Section */}
+        <section id="contact-section" className="contact-us-section">
+          <div className="container">
+            <div className="contact-header">
+              <span className="section-subtag">We&apos;re Here For You</span>
+              <h2 className="contact-heading">Reach Out to Saasu Maa&apos;s Team</h2>
+              <p className="contact-subtext">
+                Whether you&apos;re placing a bulk order, need delivery info, or just want to say hello —
+                we&apos;re always just an email away.
+              </p>
+            </div>
+
+            {/* Email Cards Grid */}
+            <div className="contact-email-grid">
+              <a href="mailto:sandhya@saasumaasfood.site" className="email-card" id="email-card-sandhya">
+                <div className="email-card-icon">👩‍🍳</div>
+                <div className="email-card-label">Founder / Owner</div>
+                <div className="email-card-name">Sandhya</div>
+                <div className="email-card-address">sandhya@saasumaasfood.site</div>
+              </a>
+              <a href="mailto:ayush@saasumaasfood.site" className="email-card" id="email-card-ayush">
+                <div className="email-card-icon">📦</div>
+                <div className="email-card-label">Orders &amp; Delivery</div>
+                <div className="email-card-name">Ayush</div>
+                <div className="email-card-address">ayush@saasumaasfood.site</div>
+              </a>
+              <a href="mailto:query@saasumaasfood.site" className="email-card" id="email-card-query">
+                <div className="email-card-icon">🙋</div>
+                <div className="email-card-label">General Queries</div>
+                <div className="email-card-name">Ask Us Anything</div>
+                <div className="email-card-address">query@saasumaasfood.site</div>
+              </a>
+              <a href="mailto:help@saasumaasfood.site" className="email-card" id="email-card-help">
+                <div className="email-card-icon">🤝</div>
+                <div className="email-card-label">Need Help?</div>
+                <div className="email-card-name">Help Desk</div>
+                <div className="email-card-address">help@saasumaasfood.site</div>
+              </a>
+              <a href="mailto:support@saasumaasfood.site" className="email-card email-card-wide" id="email-card-support">
+                <div className="email-card-icon">💬</div>
+                <div className="email-card-label">Customer Support</div>
+                <div className="email-card-name">Support Team</div>
+                <div className="email-card-address">support@saasumaasfood.site</div>
+              </a>
+            </div>
+
+            {/* Contact Form */}
+            <div className="contact-form-wrap">
+              <h3 className="contact-form-title">Send Us a Message</h3>
+              <form
+                id="contact-form"
+                className="contact-form"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const fd = new FormData(e.target);
+                  const to = fd.get('to');
+                  const subject = encodeURIComponent(fd.get('subject') || 'Inquiry from Website');
+                  const body = encodeURIComponent(
+                    `Name: ${fd.get('cname')}\nPhone: ${fd.get('cphone')}\n\n${fd.get('cmessage')}`
+                  );
+                  window.location.href = `mailto:${to}?subject=${subject}&body=${body}`;
+                }}
+              >
+                <div className="cf-row">
+                  <div className="cf-field">
+                    <label htmlFor="cf-name">Your Name *</label>
+                    <input id="cf-name" name="cname" type="text" placeholder="e.g. Priya Sharma" required />
+                  </div>
+                  <div className="cf-field">
+                    <label htmlFor="cf-phone">Phone / WhatsApp</label>
+                    <input id="cf-phone" name="cphone" type="tel" placeholder="+91 XXXXXXXXXX" />
+                  </div>
+                </div>
+                <div className="cf-row">
+                  <div className="cf-field">
+                    <label htmlFor="cf-to">Send To *</label>
+                    <select id="cf-to" name="to" required>
+                      <option value="query@saasumaasfood.site">query@ — General Query</option>
+                      <option value="help@saasumaasfood.site">help@ — Need Help</option>
+                      <option value="support@saasumaasfood.site">support@ — Customer Support</option>
+                      <option value="ayush@saasumaasfood.site">ayush@ — Order / Delivery</option>
+                      <option value="sandhya@saasumaasfood.site">sandhya@ — Founder</option>
+                    </select>
+                  </div>
+                  <div className="cf-field">
+                    <label htmlFor="cf-subject">Subject *</label>
+                    <input id="cf-subject" name="subject" type="text" placeholder="e.g. Bulk Order Inquiry" required />
+                  </div>
+                </div>
+                <div className="cf-field">
+                  <label htmlFor="cf-message">Message *</label>
+                  <textarea id="cf-message" name="cmessage" rows={4} placeholder="Tell us what you need — order details, delivery address, etc." required />
+                </div>
+                <button type="submit" className="primary-btn cf-submit" id="contact-form-submit">
+                  ✉️ Open Email Client &amp; Send
+                </button>
+              </form>
+            </div>
+          </div>
+        </section>
       </main>
+
 
       {/* Cart & Quick Order Modal */}
       {isCartOpen && (
@@ -743,15 +1019,30 @@ export default function Home() {
 
             <div className="footer-contact">
               <h4>Get in Touch</h4>
-              <p>📍 Traditional Homemade Kitchen, India</p>
-              <p>💌 <strong>Booking:</strong> 8979319003</p>
+              <p>📍 Bareilly, Uttar Pradesh, India</p>
               <p>📞 <strong>Phone:</strong> <a href="tel:8979319003" style={{ color: 'var(--gold-light)' }}>+91 8979319003</a></p>
               <p>💬 <strong>WhatsApp:</strong> <a href="https://wa.me/918979319003" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--gold-light)' }}>Chat on WhatsApp</a></p>
+              <p>📧 <strong>Query:</strong> <a href="mailto:query@saasumaasfood.site" style={{ color: 'var(--gold-light)' }}>query@saasumaasfood.site</a></p>
+              <p>🛠 <strong>Support:</strong> <a href="mailto:support@saasumaasfood.site" style={{ color: 'var(--gold-light)' }}>support@saasumaasfood.site</a></p>
+              <p>🤝 <strong>Help:</strong> <a href="mailto:help@saasumaasfood.site" style={{ color: 'var(--gold-light)' }}>help@saasumaasfood.site</a></p>
             </div>
           </div>
 
+          {/* SEO: Delivery cities — crawlable by Google */}
+          <div className="footer-cities">
+            <p style={{ fontSize: '0.78rem', color: '#a08080', textAlign: 'center', marginBottom: '6px', letterSpacing: '0.3px' }}>
+              🚚 Homemade Achar Delivery Available In:
+            </p>
+            <p style={{ fontSize: '0.75rem', color: '#8a6e6e', textAlign: 'center', lineHeight: '1.8' }}>
+              <strong>Bareilly</strong> • Pilibhit • Shahjahanpur • Rampur • Moradabad • Sambhal •
+              Lucknow • Kanpur • Agra • Varanasi • Prayagraj • Mathura • Aligarh •
+              Meerut • Ghaziabad • Noida • Gorakhpur • Jhansi • Firozabad • Etawah •
+              Bijnor • Amroha • Hapur • Delhi • Mumbai • Kolkata • Pan-India 🇮🇳
+            </p>
+          </div>
+
           <div className="footer-bottom">
-            © 2026 Saasu Maa&apos;s Food. All Rights Reserved. Maa ke haath ka swaad 💗
+            © 2026 Saasu Maa&apos;s Food — Bareilly, UP. All Rights Reserved. Maa ke haath ka swaad 💗
           </div>
         </div>
       </footer>
