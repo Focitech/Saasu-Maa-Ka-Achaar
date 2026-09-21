@@ -113,21 +113,22 @@
 - Purpose: Allow customers to log in with email+password as an alternative to OTP; strong password policy enforced
 - Files:
   - `src/lib/auth.js` — `hashPassword`, `verifyPassword` (crypto.scrypt, timing-safe), `sanitizeInput`, `isValidEmail`, `validatePasswordStrength`
-  - `src/app/api/auth/login-password/route.js` — POST endpoint: sanitizes inputs, verifies password hash, issues session cookie
-  - `src/app/api/auth/set-password/route.js` — POST endpoint (auth required): validates strength, hashes and stores password
-  - `src/app/login/page.js` — two-tab UI: OTP mode and Password mode with strength bar, show/hide toggle
+  - `src/app/api/auth/login-password/route.js` — POST endpoint: sanitizes inputs, verifies password hash, dispatches OTP if account is OTP-only
+  - `src/app/api/auth/setup-password/route.js` — POST endpoint: atomic OTP verification (`verifyAndConsumeOtp`), password strength validation, scrypt hashing, and session issue
+  - `src/app/api/auth/set-password/route.js` — POST endpoint (auth required): validates strength, hashes and stores password for active session
+  - `src/app/login/page.js` — two-tab UI: OTP mode and Password mode with integrated OTP verification on password setup form
   - `supabase/password_migration.sql` — idempotent: adds `password_hash text` column to `public.profiles`
 - Behavior / key decisions:
   - Hashing: `crypto.scrypt` (Node built-in, no extra deps); format `scrypt$salt$hash`; timing-safe comparison via `crypto.timingSafeEqual`
   - Password policy: min 8 chars, 1 uppercase, 1 lowercase, 1 digit, 1 special char — enforced server-side and shown live on client
-  - Sanitization: `sanitizeInput` strips HTML tags and control chars; applied to all auth API routes (send-otp, verify-otp, login-password, set-password)
+  - Sanitization: `sanitizeInput` strips HTML tags and control chars; applied to all auth API routes
   - User enumeration prevention: identical error message for unknown email and wrong password
-  - OTP-only accounts: if `password_hash` is null during password login, the backend automatically dispatches an OTP verification code via Resend and signals `needsPasswordSetup: true`. The UI transitions to the 6-digit OTP verification grid (`verify-otp` step). Once OTP is verified, the session is created and the user moves to the password creation step (`create` step) to set a password via session-authenticated `/api/auth/set-password`.
+  - Atomic OTP Password Setup: When an OTP-only account logs in with password, backend auto-sends 6-digit OTP to email. The setup form displays the 6-digit OTP input field directly with a live Resend countdown button, New Password, and Confirm Password. Submission atomically validates & consumes OTP via `verifyAndConsumeOtp` before updating password hash and issuing the session cookie.
   - Idempotency: password update uses atomic `UPDATE profiles SET password_hash WHERE id`
 - Config / env: None (uses existing AUTH_SECRET indirectly via session)
 - Known issues / TODO:
   - Add "Forgot Password" flow (OTP-based password reset using `purpose: 'reset'`)
-- Last changed: 2026-09-22 — implemented 3-step OTP verification before password creation for OTP-only accounts
+- Last changed: 2026-09-22 — integrated 6-digit OTP verification field directly into password setup form with atomic backend verification
 
 ## Feature: Admin Management Console & Paginated Orders
 - Status: done

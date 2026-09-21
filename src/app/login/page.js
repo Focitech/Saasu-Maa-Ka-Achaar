@@ -86,6 +86,7 @@ function LoginForm() {
   const [pwOtpDigits, setPwOtpDigits] = useState(["", "", "", "", "", ""]);
   const pwOtpRefs = useRef([]);
   const [verifiedUser, setVerifiedUser] = useState(null);
+  const [setupOtp, setSetupOtp] = useState("");
 
   // ── Cooldown timer ────────────────────────────────────────────────────────
   useEffect(() => {
@@ -146,6 +147,7 @@ function LoginForm() {
     setConfirmPassword("");
     setPwOtpDigits(["", "", "", "", "", ""]);
     setPwStep("enter");
+    setSetupOtp("");
     setVerifiedUser(null);
   };
 
@@ -261,21 +263,20 @@ function LoginForm() {
       });
       const data = await res.json();
 
-      // OTP-only account detected: OTP was dispatched to email. Transition to verify-otp step.
+      // OTP-only account detected: OTP was dispatched to email. Transition to create step with OTP field.
       if (data.needsPasswordSetup) {
         setPassword("");
         setConfirmPassword("");
-        setPwOtpDigits(["", "", "", "", "", ""]);
-        setPwStep("verify-otp");
+        setSetupOtp("");
+        setPwStep("create");
         if (data.cooldown) {
           setCooldown(data.remainingSeconds || 60);
-          setSuccessMsg(data.message || `Your account was created via OTP. Enter the 6-digit code sent to ${cleanEmail} to set a password.`);
+          setSuccessMsg(data.message || `Your account was created via OTP. Enter the 6-digit code sent to ${cleanEmail} to set your password.`);
         } else {
           setCooldown(data.cooldownSeconds || 60);
-          setSuccessMsg(data.message || `Your account was created via OTP. We sent a 6-digit verification code to ${cleanEmail}. Verify it to create your password.`);
+          setSuccessMsg(data.message || `Your account was created via OTP. We sent a 6-digit verification code to ${cleanEmail}. Enter it below to set your password.`);
         }
         setIsLoading(false);
-        setTimeout(() => pwOtpRefs.current[0]?.focus(), 100);
         return;
       }
 
@@ -379,11 +380,18 @@ function LoginForm() {
     }
   };
 
-  // ── Setup password for verified OTP-only accounts ────────────────────────
+  // ── Setup password with OTP verification for OTP-only accounts ────────────
   const handleSetupPassword = async (e) => {
     e.preventDefault();
+    const cleanEmail = sanitize(email).toLowerCase();
+    const cleanOtp = sanitize(setupOtp).trim();
     const cleanPwd = sanitize(password);
     const cleanConfirm = sanitize(confirmPassword);
+
+    if (!cleanOtp || cleanOtp.length !== 6) {
+      setErrorMsg("Please enter the 6-digit verification code sent to your email.");
+      return;
+    }
     if (!cleanPwd || cleanPwd.length < 8) {
       setErrorMsg("Password must be at least 8 characters.");
       return;
@@ -396,18 +404,23 @@ function LoginForm() {
     setErrorMsg("");
     setSuccessMsg("");
     try {
-      const res = await fetch("/api/auth/set-password", {
+      const res = await fetch("/api/auth/setup-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password: cleanPwd, confirmPassword: cleanConfirm }),
+        body: JSON.stringify({
+          email: cleanEmail,
+          otp: cleanOtp,
+          password: cleanPwd,
+          confirmPassword: cleanConfirm,
+        }),
       });
       const data = await res.json();
       if (!res.ok) {
-        setErrorMsg(data.error || "Failed to set password. Please try again.");
+        setErrorMsg(data.error || "Failed to set password. Please check your verification code.");
         setIsLoading(false);
         return;
       }
-      onLoginSuccess(verifiedUser || { email: sanitize(email).toLowerCase() });
+      onLoginSuccess(data.user);
     } catch {
       setErrorMsg("Network error. Please try again.");
       setIsLoading(false);
@@ -683,18 +696,67 @@ function LoginForm() {
               )}
 
               {pwStep === "create" && (
-                /* Step 3: Create password step — after OTP is verified */
+                /* Step 3: Create password step with OTP verification */
                 <form onSubmit={handleSetupPassword} className="auth-form">
                   <div className="pw-setup-notice">
                     <span className="pw-setup-notice-icon">🔑</span>
                     <div>
                       <strong>Create Your Password</strong>
                       <p>
-                        Identity verified! Set a password for <em>{email}</em> so you can sign in with your password anytime.
+                        Your account <em>{email}</em> was created via OTP. Enter the 6-digit code sent to your email and set your new password below.
                       </p>
                     </div>
                   </div>
 
+                  {/* ── 6-Digit OTP Field ── */}
+                  <div className="auth-field-group">
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
+                      <label htmlFor="setup-otp" className="auth-label" style={{ marginBottom: 0 }}>
+                        Verification Code (OTP) <span className="auth-required">*</span>
+                      </label>
+                      {cooldown > 0 ? (
+                        <span className="otp-cooldown-text" style={{ fontSize: "12px" }}>
+                          Resend in <strong>{cooldown}s</strong>
+                        </span>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={handleResendPwOtp}
+                          className="auth-text-link-btn"
+                          style={{ fontSize: "12px", padding: 0 }}
+                          disabled={isLoading}
+                        >
+                          🔄 Resend OTP
+                        </button>
+                      )}
+                    </div>
+                    <div className="auth-input-wrap">
+                      <span className="auth-input-icon">🔢</span>
+                      <input
+                        id="setup-otp"
+                        type="text"
+                        inputMode="numeric"
+                        pattern="[0-9]*"
+                        maxLength={6}
+                        required
+                        placeholder="Enter 6-digit OTP code"
+                        value={setupOtp}
+                        onChange={(e) => {
+                          setSetupOtp(e.target.value.replace(/\D/g, "").slice(0, 6));
+                          setErrorMsg("");
+                        }}
+                        className="auth-input"
+                        style={{ letterSpacing: "4px", fontSize: "18px", fontWeight: "700" }}
+                        disabled={isLoading}
+                        autoFocus
+                      />
+                    </div>
+                    <span style={{ fontSize: "12px", color: "var(--color-text-muted)", marginTop: "4px", display: "block" }}>
+                      Check your email for the 6-digit verification code.
+                    </span>
+                  </div>
+
+                  {/* ── New Password Field ── */}
                   <div className="auth-field-group">
                     <label htmlFor="new-password" className="auth-label">
                       New Password <span className="auth-required">*</span>
@@ -711,7 +773,6 @@ function LoginForm() {
                         className="auth-input"
                         disabled={isLoading}
                         autoComplete="new-password"
-                        autoFocus
                       />
                       <button
                         type="button"
@@ -726,6 +787,7 @@ function LoginForm() {
                     <StrengthBar password={password} />
                   </div>
 
+                  {/* ── Confirm Password Field ── */}
                   <div className="auth-field-group">
                     <label htmlFor="confirm-password" className="auth-label">
                       Confirm Password <span className="auth-required">*</span>
@@ -759,12 +821,12 @@ function LoginForm() {
                     type="submit"
                     id="setup-password-btn"
                     className="auth-submit-btn primary-btn"
-                    disabled={isLoading}
+                    disabled={isLoading || setupOtp.length !== 6}
                   >
                     {isLoading ? (
-                      <span className="auth-spinner-wrap"><span className="auth-spinner" /> Setting Password...</span>
+                      <span className="auth-spinner-wrap"><span className="auth-spinner" /> Verifying OTP & Setting Password...</span>
                     ) : (
-                      "Set Password & Complete Login ➔"
+                      "Verify OTP & Set Password ➔"
                     )}
                   </button>
 
@@ -774,13 +836,14 @@ function LoginForm() {
                     style={{ textAlign: "center", marginTop: "8px" }}
                     onClick={() => {
                       setPwStep("enter");
+                      setSetupOtp("");
                       setPassword("");
                       setConfirmPassword("");
                       setErrorMsg("");
                       setSuccessMsg("");
                     }}
                   >
-                    ← Cancel
+                    ← Back
                   </button>
                 </form>
               )}
