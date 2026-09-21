@@ -1,4 +1,5 @@
 import crypto from 'crypto';
+import { promisify } from 'util';
 import { cookies } from 'next/headers';
 import { getSupabaseAdmin } from './supabase/admin';
 
@@ -6,6 +7,91 @@ export const SESSION_COOKIE_NAME = 'sasumaa_auth_session';
 export const OTP_EXPIRY_MINUTES = 10;
 export const OTP_COOLDOWN_SECONDS = 60;
 export const MAX_OTP_ATTEMPTS = 5;
+
+const scrypt = promisify(crypto.scrypt);
+
+// -------------------------------------------------------
+// Input Sanitization
+// -------------------------------------------------------
+
+/**
+ * Strips HTML tags, trims whitespace, removes control characters.
+ * Safe for all string inputs (email, name, phone, password).
+ */
+export function sanitizeInput(value) {
+  if (typeof value !== 'string') return '';
+  return value
+    .trim()
+    .replace(/<[^>]*>/g, '')           // strip HTML tags
+    .replace(/[\x00-\x08\x0B\x0E-\x1F\x7F]/g, ''); // strip control chars
+}
+
+/**
+ * Validates email format.
+ */
+export function isValidEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+/**
+ * Strong password policy:
+ * - Min 8 characters
+ * - At least 1 uppercase letter
+ * - At least 1 lowercase letter
+ * - At least 1 digit
+ * - At least 1 special character
+ * Returns { valid: boolean, error: string | null }
+ */
+export function validatePasswordStrength(password) {
+  if (!password || password.length < 8) {
+    return { valid: false, error: 'Password must be at least 8 characters long.' };
+  }
+  if (!/[A-Z]/.test(password)) {
+    return { valid: false, error: 'Password must contain at least one uppercase letter.' };
+  }
+  if (!/[a-z]/.test(password)) {
+    return { valid: false, error: 'Password must contain at least one lowercase letter.' };
+  }
+  if (!/[0-9]/.test(password)) {
+    return { valid: false, error: 'Password must contain at least one number.' };
+  }
+  if (!/[^A-Za-z0-9]/.test(password)) {
+    return { valid: false, error: 'Password must contain at least one special character (!@#$%^&* etc.).' };
+  }
+  return { valid: true, error: null };
+}
+
+// -------------------------------------------------------
+// Password Hashing (scrypt — no extra dependencies)
+// -------------------------------------------------------
+
+/**
+ * Hashes a plaintext password using scrypt.
+ * Returns a string: `scrypt$salt$hash` (safe to store in DB).
+ */
+export async function hashPassword(plaintext) {
+  const salt = crypto.randomBytes(16).toString('hex');
+  const derivedKey = await scrypt(plaintext, salt, 64);
+  return `scrypt$${salt}$${derivedKey.toString('hex')}`;
+}
+
+/**
+ * Verifies a plaintext password against a stored scrypt hash.
+ * Timing-safe comparison prevents timing attacks.
+ */
+export async function verifyPassword(plaintext, storedHash) {
+  if (!storedHash || !storedHash.startsWith('scrypt$')) return false;
+  const [, salt, hash] = storedHash.split('$');
+  try {
+    const derivedKey = await scrypt(plaintext, salt, 64);
+    const derivedBuffer = derivedKey;
+    const storedBuffer = Buffer.from(hash, 'hex');
+    if (derivedBuffer.length !== storedBuffer.length) return false;
+    return crypto.timingSafeEqual(derivedBuffer, storedBuffer);
+  } catch {
+    return false;
+  }
+}
 
 const AUTH_SECRET =
   process.env.AUTH_SECRET ||

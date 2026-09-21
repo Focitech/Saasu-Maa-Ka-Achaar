@@ -18,6 +18,7 @@ function SignupForm() {
   const [otpDigits, setOtpDigits] = useState(['', '', '', '', '', '']);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const [successMsg, setSuccessMsg] = useState('');
   const [cooldown, setCooldown] = useState(0);
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 

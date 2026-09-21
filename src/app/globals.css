@@ -3424,4 +3424,108 @@ body {
   }
 }
 
+/* ── Login Mode Tabs ──────────────────────────────────────────── */
+.login-mode-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 5px;
+}
+
+.login-mode-tab {
+  flex: 1;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 9px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.22s ease;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.login-mode-tab:hover {
+  background: rgba(255, 255, 255, 0.09);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.login-mode-tab.active {
+  background: linear-gradient(135deg, #2563eb 0%, #6366f1 100%);
+  color: #fff;
+  box-shadow: 0 2px 12px rgba(99, 102, 241, 0.4);
+}
+
+/* ── Password Input Group ─────────────────────────────────────── */
+.pwd-toggle-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  padding: 0;
+  color: rgba(255, 255, 255, 0.55);
+  transition: color 0.2s;
+  z-index: 2;
+}
+
+.pwd-toggle-btn:hover {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* ── Password Strength Bar ────────────────────────────────────── */
+.pwd-strength-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.pwd-strength-bars {
+  display: flex;
+  gap: 4px;
+  flex: 1;
+}
+
+.pwd-strength-segment {
+  height: 4px;
+  flex: 1;
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+
+.pwd-strength-label {
+  font-size: 0.74rem;
+  font-weight: 700;
+  min-width: 72px;
+  text-align: right;
+  letter-spacing: 0.03em;
+  transition: color 0.3s;
+}
+
+/* ── Hint / helper text ───────────────────────────────────────── */
+.auth-hint-text {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.5);
+  text-align: center;
+  margin-top: 4px;
+}
+
+.auth-text-link-btn.inline {
+  display: inline;
+  padding: 0;
+  font-size: 0.82rem;
+  color: #818cf8;
+  font-weight: 600;
+  vertical-align: baseline;
+}
+
 

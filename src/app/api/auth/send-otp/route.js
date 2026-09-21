@@ -1,23 +1,22 @@
 import { NextResponse } from 'next/server';
-import { generateOtp, saveOtp } from '@/lib/auth';
+import { generateOtp, saveOtp, sanitizeInput, isValidEmail } from '@/lib/auth';
 import { sendOtpEmail } from '@/lib/resend';
-
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { email, purpose = 'login' } = body;
+    const rawEmail = sanitizeInput(body.email || '');
+    const rawPurpose = sanitizeInput(body.purpose || 'login');
 
-    if (!email || !EMAIL_REGEX.test(email.trim())) {
+    if (!rawEmail || !isValidEmail(rawEmail)) {
       return NextResponse.json(
         { success: false, error: 'Please enter a valid email address.' },
         { status: 400 }
       );
     }
 
-    const cleanEmail = email.trim().toLowerCase();
-    const cleanPurpose = purpose === 'signup' ? 'signup' : 'login';
+    const cleanEmail = rawEmail.toLowerCase();
+    const cleanPurpose = rawPurpose === 'signup' ? 'signup' : 'login';
 
     // 1. Generate 6-digit OTP
     const otp = generateOtp();

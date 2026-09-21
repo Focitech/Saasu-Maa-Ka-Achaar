@@ -1,19 +1,23 @@
 import { NextResponse } from 'next/server';
-import { verifyAndConsumeOtp, createSessionToken, setSessionCookie } from '@/lib/auth';
+import { verifyAndConsumeOtp, createSessionToken, setSessionCookie, sanitizeInput, isValidEmail } from '@/lib/auth';
 
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { email, otp, purpose = 'login', fullName, phone } = body;
+    const email = sanitizeInput(body.email || '').toLowerCase();
+    const otp = sanitizeInput(String(body.otp || ''));
+    const purpose = sanitizeInput(body.purpose || 'login') === 'signup' ? 'signup' : 'login';
+    const fullName = sanitizeInput(body.fullName || '');
+    const phone = sanitizeInput(body.phone || '');
 
-    if (!email || !otp) {
+    if (!email || !isValidEmail(email)) {
       return NextResponse.json(
         { success: false, error: 'Email and 6-digit verification code are required.' },
         { status: 400 }
       );
     }
 
-    const cleanOtp = otp.toString().trim();
+    const cleanOtp = otp.trim();
     if (!/^\d{6}$/.test(cleanOtp)) {
       return NextResponse.json(
         { success: false, error: 'Please enter a valid 6-digit numeric code.' },
