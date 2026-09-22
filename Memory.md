@@ -135,11 +135,13 @@
 - Status: done
 - Purpose: Separate administration console for store owners to manage orders, update statuses, and audit payments
 - Files:
-  - `src/app/admin/page.js` — responsive admin console with KPI cards, tab views, and paginated orders table
+  - `src/app/admin/page.js` — responsive admin console with KPI cards, tab views, swipe hint, and paginated orders table
+  - `src/app/globals.css` — mobile-optimized layouts (<= 992px, <= 768px, <= 600px, <= 380px) for admin header, controls, swipeable tables, and KPI cards
   - `src/app/api/admin/orders/route.js` — paginated, indexed query endpoint with status filter & search
   - `src/app/api/admin/stats/route.js` — fast aggregation of total orders, revenue, and status breakdowns
   - `supabase/schema.sql` — orders & payments table with high-performance B-tree indexes
 - Behavior / key decisions:
+  - Mobile-First Responsive Layout: Sticky scroll-hint indicator, minimum 780px table width with momentum touch scrolling (`-webkit-overflow-scrolling: touch`), flex-wrapped header actions, horizontal-scrolling filter chips, and stacked 2-column/1-column KPI cards.
   - Pagination & Performance: Offset/limit pagination with `range()` using composite index `(status, created_at desc)`.
   - Idempotent Payments Table: Unique index on `idempotency_key` ensures zero duplicate transactions.
   - Real-time Status Updates: In-table dropdowns for immediate PATCH update of order & payment statuses.
@@ -147,19 +149,20 @@
 - Config / env:
   - `SUPABASE_SERVICE_ROLE_KEY`: Required for admin data read/write
 - Known issues / TODO: None
-- Last changed: 2026-09-21 — created separate admin dashboard with paginated orders and payments audit
+- Last changed: 2026-09-22 — added comprehensive mobile responsive design across headers, KPI cards, tables, and tab controls
 
 ## Feature: Admin Product Catalog & Cloudinary Media
 - Status: done
 - Purpose: Admin dashboard to edit product descriptions, rates for 250g/500g/1kg, toggle stock status, and upload high-res jar photos to Cloudinary
 - Files:
   - `src/app/admin/products/page.js` — interactive catalog grid, stock toggles, edit drawer modal, and photo uploader
+  - `src/app/globals.css` — flexible product grid (`repeat(auto-fill, minmax(min(100%, 280px), 1fr))`), full-width mobile edit drawer modal, and stacked upload controls
   - `src/app/api/admin/products/route.js` — GET, POST, and PATCH endpoints for product data with Supabase persistence and fallback
   - `src/app/api/admin/upload/route.js` — multipart image upload endpoint with Cloudinary buffer streaming and dev fallback
   - `src/lib/cloudinary.js` — Cloudinary v2 SDK configuration and upload helper
-  - `src/app/globals.css` — catalog grid, product cards, stock badges, pricing fieldset, and modal drawer styles
   - `src/app/admin/page.js` — tab navigation and top bar link to `/admin/products`
 - Behavior / key decisions:
+  - Responsive Catalog & Drawer: Grid adapts cleanly from desktop multi-columns down to single column on mobile screens <= 600px; slide-in edit modal expands to 100% viewport width with stacked upload preview, inputs, and touch-friendly action buttons.
   - Dynamic Multi-Size Rates: Stores 250g, 500g, and 1kg rate mapping for all varieties in Supabase `products.rates` JSONB column.
   - Quick Stock Toggle: Instant PATCH toggle for `in_stock` with optimistic UI update and toast feedback.
   - Cloudinary Image Delivery: Direct server-side upload stream to folder `saasumaa_products` with auto webp/jpg optimization; falls back to dev base64 preview when Cloudinary keys are unconfigured.
@@ -169,7 +172,7 @@
   - `CLOUDINARY_API_KEY`: Cloudinary API key
   - `CLOUDINARY_API_SECRET`: Cloudinary API secret
 - Known issues / TODO: None
-- Last changed: 2026-09-21 — created admin product catalog management page and Cloudinary photo uploader
+- Last changed: 2026-09-22 — added mobile responsive grid, touch-friendly modal drawer, and stacked photo uploader
 
 ## Feature: WhatsApp Checkout & Order Dispatch
 - Status: done

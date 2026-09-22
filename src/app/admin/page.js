@@ -267,6 +267,9 @@ export default function AdminPage() {
             </div>
 
             {/* Orders Table */}
+            {!isLoading && orders.length > 0 && (
+              <div className="admin-swipe-hint">↔️ Swipe table horizontally to view all details & update status</div>
+            )}
             <div className="admin-table-wrap">
               {isLoading ? (
                 <div className="admin-table-loading">
@@ -409,6 +412,9 @@ export default function AdminPage() {
               </p>
             </div>
 
+            {orders.length > 0 && (
+              <div className="admin-swipe-hint">↔️ Swipe table horizontally to view all audit records</div>
+            )}
             <div className="admin-table-wrap">
               <table className="admin-table">
                 <thead>
