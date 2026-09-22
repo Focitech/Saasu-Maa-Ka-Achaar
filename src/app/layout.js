@@ -143,7 +143,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="hi-IN" suppressHydrationWarning>
+    <html lang="hi-IN" data-scroll-behavior="smooth" suppressHydrationWarning>
       <head>
         <link rel="icon" href="/images/logo.jpg" />
         <link rel="apple-touch-icon" href="/images/logo.jpg" />

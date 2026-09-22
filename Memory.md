@@ -62,12 +62,13 @@
   - Open Graph + Twitter Cards configured for sharing previews
   - `canonical` set to production domain; both `hi-IN` / `en-IN` language alternates
   - `robots.txt` blocks `/api/` routes; sitemap linked
+  - Next.js Smooth Scrolling: Added `data-scroll-behavior="smooth"` attribute to `<html>` and scoped CSS to `html[data-scroll-behavior="smooth"]` to eliminate route transition jank and console warnings.
 - Config / env: Domain must be `saasumaasfood.site` in production
 - Known issues / TODO:
   - Add Google Search Console verification token to layout.js `verification.google` when available
   - Submit sitemap.xml to Google Search Console manually after deploy
   - Create Google Business Profile for Bareilly to amplify local SEO
-- Last changed: 2026-09-21 — full SEO overhaul (Bareilly + UP targeting)
+- Last changed: 2026-09-22 — added data-scroll-behavior="smooth" to html root and scoped CSS for Next.js route transitions
 
 ## Feature: Email OTP Auth (Resend & Supabase)
 - Status: done
