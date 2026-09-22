@@ -8,6 +8,7 @@
 - Admin Management Console & Paginated Orders: `done`
 - Admin Product Catalog & Cloudinary Media: `done`
 - WhatsApp Checkout & Order Dispatch: `done`
+- Legal & Compliance Pages (Terms, Privacy, Refund, Shipping): `done`
 
 
 ## Tech Stack & Specifications
@@ -187,4 +188,24 @@
 - Config / env: WhatsApp business number `918979319003`
 - Known issues / TODO: None
 - Last changed: 2026-09-22 — added automatic WhatsApp redirection with prefilled order details on order confirmation
+
+## Feature: Legal & Compliance Pages (Terms, Privacy, Refund, Shipping)
+- Status: done
+- Purpose: Full consumer & eCommerce legal compliance under IT Act 2000, DPDP Act 2023, and Consumer Protection (E-Commerce) Rules 2020 for food products
+- Files:
+  - `src/components/LegalLayout.js` — unified brand layout with hero header, switcher chips, and storefront navigation
+  - `src/app/terms/page.js` — Terms & Conditions covering handcrafted food standards, pricing, ordering, Bareilly jurisdiction
+  - `src/app/privacy/page.js` — Privacy Policy covering zero data selling, scrypt password security, Supabase/Resend storage, and DPDP rights
+  - `src/app/refund/page.js` — Refund & Cancellation policy covering food hygiene, 100% transit damage replacement, and 5-7 day bank refunds
+  - `src/app/shipping/page.js` — Shipping & Delivery policy covering Bareilly local, UP regional, and Pan-India courier transit times
+  - `src/app/globals.css` — `.legal-page-wrap`, `.legal-content-card`, `.legal-tab-chip`, 4-column `.footer-grid`
+  - `src/app/page.js` — 4-column footer with dedicated "Customer & Legal" section and footer-bottom policy links
+  - `src/app/sitemap.js` — legal pages included for Google crawler indexing
+- Behavior / key decisions:
+  - FSSAI & Food Hygiene Alignment: Outlines why opened pickle jars are non-returnable, while guaranteeing 100% free replacement or refund for in-transit bottle breakage/leakage with 48h WhatsApp notice.
+  - Zero Data-Selling Pledge: Explicit declaration under Indian DPDP Act 2023 that customer contact and address data is never leased or sold.
+  - Interactive Tab Switcher: Customers can jump seamlessly across all 4 legal policies with one tap.
+- Config / env: None
+- Known issues / TODO: None
+- Last changed: 2026-09-22 — published complete legal compliance suite (Terms, Privacy, Refund, Shipping) with footer integration and sitemap inclusion
 

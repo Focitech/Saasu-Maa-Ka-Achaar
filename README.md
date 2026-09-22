@@ -15,6 +15,7 @@ Official web storefront and management platform for **Saasu Maa's Food** — han
 - **Official Rate Card & Price List**: Dedicated section displaying the authentic price poster and interactive pricing table.
 - **Direct WhatsApp & Phone Ordering**: Automatic WhatsApp checkout redirection with complete itemized order breakdown, order reference ID, delivery address, and direct phone booking (`+91 8979319003`).
 - **Comprehensive Local & Regional SEO**: JSON-LD structured data (`LocalBusiness`, `Product`, `BreadcrumbList`), Open Graph, Twitter Cards, automated `sitemap.xml`, and `robots.txt` optimized for Bareilly, Uttar Pradesh, and pan-India discovery.
+- **Legal & Consumer Compliance Suite**: Fully articulated legal pages covering **Terms & Conditions** (`/terms`), **Privacy Policy** (`/privacy`, DPDP Act 2023 compliant), **Refund, Return & Cancellation** (`/refund`, 100% transit damage replacement policy), and **Shipping & Delivery** (`/shipping`, Bareilly, UP, and Pan-India coverage).
 
 ---
 

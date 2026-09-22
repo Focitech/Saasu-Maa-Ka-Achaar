@@ -1235,6 +1235,17 @@ export default function Home() {
               </ul>
             </div>
 
+            <div className="footer-links">
+              <h4>Customer &amp; Legal</h4>
+              <ul>
+                <li><Link href="/terms">Terms &amp; Conditions</Link></li>
+                <li><Link href="/privacy">Privacy Policy</Link></li>
+                <li><Link href="/refund">Refund &amp; Cancellation</Link></li>
+                <li><Link href="/shipping">Shipping &amp; Delivery</Link></li>
+                <li><Link href="/account">Customer Account</Link></li>
+              </ul>
+            </div>
+
             <div className="footer-contact">
               <h4>Get in Touch</h4>
               <p>📍 Bareilly, Uttar Pradesh, India</p>
@@ -1260,7 +1271,15 @@ export default function Home() {
           </div>
 
           <div className="footer-bottom">
-            © 2026 Saasu Maa&apos;s Food — Bareilly, UP. All Rights Reserved. Maa ke haath ka swaad 💗
+            <div style={{ marginBottom: '10px', display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '8px', fontSize: '0.8rem' }}>
+              <Link href="/terms" style={{ color: '#d1b8b8', textDecoration: 'none' }}>Terms &amp; Conditions</Link> •
+              <Link href="/privacy" style={{ color: '#d1b8b8', textDecoration: 'none' }}>Privacy Policy</Link> •
+              <Link href="/refund" style={{ color: '#d1b8b8', textDecoration: 'none' }}>Refund &amp; Cancellation</Link> •
+              <Link href="/shipping" style={{ color: '#d1b8b8', textDecoration: 'none' }}>Shipping Policy</Link>
+            </div>
+            <div>
+              © 2026 Saasu Maa&apos;s Food — Bareilly, UP. All Rights Reserved. Maa ke haath ka swaad 💗
+            </div>
           </div>
         </div>
       </footer>
