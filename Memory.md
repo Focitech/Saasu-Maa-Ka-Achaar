@@ -135,21 +135,21 @@
 - Status: done
 - Purpose: Separate administration console for store owners to manage orders, update statuses, and audit payments
 - Files:
-  - `src/app/admin/page.js` — responsive admin console with KPI cards, tab views, swipe hint, and paginated orders table
-  - `src/app/globals.css` — mobile-optimized layouts (<= 992px, <= 768px, <= 600px, <= 380px) for admin header, controls, swipeable tables, and KPI cards
+  - `src/app/admin/page.js` — responsive admin console with KPI cards, tab views, all-in-one order cards view, table view switcher, and paginated orders
+  - `src/app/globals.css` — `.admin-orders-cards-list`, `.admin-order-card-item`, status selectors, WhatsApp contact buttons, view switcher, and mobile media queries
   - `src/app/api/admin/orders/route.js` — paginated, indexed query endpoint with status filter & search
   - `src/app/api/admin/stats/route.js` — fast aggregation of total orders, revenue, and status breakdowns
   - `supabase/schema.sql` — orders & payments table with high-performance B-tree indexes
 - Behavior / key decisions:
-  - Mobile-First Responsive Layout: Sticky scroll-hint indicator, minimum 780px table width with momentum touch scrolling (`-webkit-overflow-scrolling: touch`), flex-wrapped header actions, horizontal-scrolling filter chips, and stacked 2-column/1-column KPI cards.
-  - Pagination & Performance: Offset/limit pagination with `range()` using composite index `(status, created_at desc)`.
+  - All-in-One Detail Card View (`viewMode: 'cards'`): Displays every single order detail (Ref, Date, Total, Customer, Clickable Phone, Full Address, Email, Itemized Pickles list, Order Status select, Payment Status select, Direct WhatsApp & Call buttons) on one screen without requiring horizontal scrolling.
+  - Interactive View Switcher: Easy toggle between `📱 Cards` and `📊 Table` so admins can switch anytime on mobile or desktop.
+  - Real-time Status Updates: In-card/in-table dropdowns for immediate PATCH update of order & payment statuses.
   - Idempotent Payments Table: Unique index on `idempotency_key` ensures zero duplicate transactions.
-  - Real-time Status Updates: In-table dropdowns for immediate PATCH update of order & payment statuses.
-  - WhatsApp Direct Action: Direct links to contact customer on WhatsApp with prefilled order details.
+  - WhatsApp Direct Action: Direct link to contact customer on WhatsApp with prefilled order details and items summary.
 - Config / env:
   - `SUPABASE_SERVICE_ROLE_KEY`: Required for admin data read/write
 - Known issues / TODO: None
-- Last changed: 2026-09-22 — added comprehensive mobile responsive design across headers, KPI cards, tables, and tab controls
+- Last changed: 2026-09-22 — added all-in-one Order Cards view with zero horizontal scroll and Cards/Table switcher
 
 ## Feature: Admin Product Catalog & Cloudinary Media
 - Status: done

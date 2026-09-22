@@ -9,7 +9,7 @@ Official web storefront and management platform for **Saasu Maa's Food** — han
 - **Interactive Product Catalog**: Dynamic size switcher across **250g**, **500g**, and **1kg** variants with real-time price calculations and local basket management.
 - **Dual Authentication (Password & Email OTP)**: Secure login supporting both email OTP and strong password authentication (`crypto.scrypt` hashing with per-user salt and timing-safe verification), with automatic OTP identity verification for OTP-created accounts setting up their first password.
 - **Customer Account Portal**: Dedicated `/account` dashboard displaying member details, order shortcuts, and direct concierge links.
-- **Admin Management Console**: Dedicated `/admin` route with full mobile responsiveness (touch-swipe tables, swipe hint, adaptive KPI cards, compact pagination), real-time order status updater, and idempotent payment audit trails.
+- **Admin Management Console**: Dedicated `/admin` route with all-in-one Order Cards view (zero horizontal scrolling, all details, items list, order/payment status selectors, and WhatsApp button visible on one page), interactive Cards/Table view switcher, and idempotent payment audit trails.
 - **Product Catalog & Pricing Editor**: Dedicated `/admin/products` suite to manage pickle varieties, bilingual Hindi/English names, real-time stock toggles, adaptive single/multi-column catalog grid, and full-screen mobile edit drawer modal with Cloudinary uploads.
 - **Cloudinary Image Management**: Automated jar photo uploads directly to Cloudinary with CDN delivery, auto-formatting, and dev base64 fallback.
 - **Official Rate Card & Price List**: Dedicated section displaying the authentic price poster and interactive pricing table.
