@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import SpiroSpinner from '@/components/SpiroSpinner';
+import BackButton from '@/components/BackButton';
 
 const STATUS_OPTIONS = ['all', 'pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled'];
 const PAYMENT_STATUS_OPTIONS = ['unpaid', 'authorized', 'paid', 'refunded', 'failed'];
@@ -155,9 +156,7 @@ export default function AdminPage() {
           </div>
 
           <div className="admin-header-actions">
-            <Link href="/" className="admin-header-link">
-              🏪 Storefront
-            </Link>
+            <BackButton label="Storefront" fallbackHref="/" />
             <Link href="/admin/products" className="admin-header-link" style={{ borderColor: 'var(--gold-accent)', color: 'var(--gold-light)' }}>
               🌶️ Products & Rates
             </Link>

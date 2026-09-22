@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import BackButton from '@/components/BackButton';
 
 const LEGAL_TABS = [
   { id: 'terms', label: '📜 Terms & Conditions', href: '/terms' },
@@ -14,19 +15,22 @@ export default function LegalLayout({ title, subtitle, activeTab, children }) {
       {/* Top Navbar */}
       <nav className="legal-top-nav">
         <div className="legal-top-nav-inner">
-          <Link href="/" className="legal-brand-link">
-            <Image
-              src="/images/logo.jpg"
-              alt="Saasu Maa Logo"
-              width={38}
-              height={38}
-              style={{ borderRadius: '50%', border: '1.5px solid var(--gold-accent)' }}
-            />
-            <span className="legal-brand-name">सासू माँ का अचार</span>
-          </Link>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+            <BackButton label="Back" fallbackHref="/" />
+            <Link href="/" className="legal-brand-link">
+              <Image
+                src="/images/logo.jpg"
+                alt="Saasu Maa Logo"
+                width={36}
+                height={36}
+                style={{ borderRadius: '50%', border: '1.5px solid var(--gold-accent)' }}
+              />
+              <span className="legal-brand-name">सासू माँ का अचार</span>
+            </Link>
+          </div>
 
           <Link href="/" className="legal-home-btn">
-            🏪 Back to Storefront
+            🏪 Storefront
           </Link>
         </div>
       </nav>

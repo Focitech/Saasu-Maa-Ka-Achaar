@@ -497,6 +497,7 @@ export default function Home() {
           </a>
 
           <ul className="nav-links">
+            <li><Link href="/products" className="nav-store-link">🛒 Shop Products</Link></li>
             <li><a href="#varieties">Our Varieties</a></li>
             <li><a href="#price-list">Price List</a></li>
             <li><a href="#shelf">Real Jars</a></li>
@@ -505,14 +506,6 @@ export default function Home() {
           </ul>
 
           <div className="nav-actions">
-            <a
-              href="tel:8979319003"
-              className="phone-badge-nav"
-              title="Call for bookings"
-            >
-              📞 8979319003
-            </a>
-
             <button
               id="cart-toggle-btn"
               className="cart-btn"
@@ -598,6 +591,9 @@ export default function Home() {
         {/* Mobile Menu Dropdown */}
         {isMobileMenuOpen && (
           <div className="mobile-menu open">
+            <Link href="/products" className="mobile-nav-link mobile-store-link" onClick={() => setIsMobileMenuOpen(false)}>
+              🛒 Shop Products / Food Store
+            </Link>
             <a href="#varieties" className="mobile-nav-link" onClick={() => setIsMobileMenuOpen(false)}>
               🌶️ Explore All Varieties
             </a>
@@ -723,11 +719,11 @@ export default function Home() {
               </div>
 
               <div className="hero-actions">
-                <a href="#varieties" className="primary-btn">
+                <Link href="/products" className="primary-btn">
+                  🛒 Shop All Products
+                </Link>
+                <a href="#varieties" className="secondary-btn">
                   Explore Varieties
-                </a>
-                <a href="#price-list" className="secondary-btn">
-                  View Price List
                 </a>
               </div>
             </div>
@@ -825,6 +821,7 @@ export default function Home() {
                         width={280}
                         height={220}
                         className="product-card-img"
+                        style={{ width: 'auto', height: 'auto', maxWidth: '100%', maxHeight: '100%' }}
                       />
                     </div>
 
@@ -1227,6 +1224,7 @@ export default function Home() {
             <div className="footer-links">
               <h4>Pickle Varieties</h4>
               <ul>
+                <li><Link href="/products" style={{ color: 'var(--gold-light)', fontWeight: 600 }}>🛍️ All Products Store</Link></li>
                 <li><a href="#varieties">Mango Pickle (आम का अचार)</a></li>
                 <li><a href="#varieties">Lahsun Pickle (लहसुन अचार)</a></li>
                 <li><a href="#varieties">Green Chilli (हरी मिर्च)</a></li>

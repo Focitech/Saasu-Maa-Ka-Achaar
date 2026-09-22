@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import SpiroSpinner from '@/components/SpiroSpinner';
+import BackButton from '@/components/BackButton';
 
 export default function AccountPage() {
   const router = useRouter();
@@ -63,6 +64,10 @@ export default function AccountPage() {
       <div className="auth-glow-bottom"></div>
 
       <div className="auth-container account-container">
+        <div style={{ marginBottom: '14px', display: 'flex', justifyContent: 'flex-start' }}>
+          <BackButton label="Back to Home" fallbackHref="/" />
+        </div>
+
         {/* Header */}
         <div className="auth-brand-header">
           <Link href="/" className="auth-brand-logo-link">

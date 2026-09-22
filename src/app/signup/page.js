@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import SpiroSpinner from '@/components/SpiroSpinner';
+import BackButton from '@/components/BackButton';
 
 function SignupForm() {
   const router = useRouter();
@@ -227,6 +228,10 @@ function SignupForm() {
       <div className="auth-glow-bottom"></div>
 
       <div className="auth-container">
+        <div style={{ marginBottom: '14px', display: 'flex', justifyContent: 'flex-start' }}>
+          <BackButton label="Back to Home" fallbackHref="/" />
+        </div>
+
         {/* Brand Header */}
         <div className="auth-brand-header">
           <Link href="/" className="auth-brand-logo-link">

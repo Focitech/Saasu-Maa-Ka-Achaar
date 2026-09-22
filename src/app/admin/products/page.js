@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import SpiroSpinner from '@/components/SpiroSpinner';
+import BackButton from '@/components/BackButton';
 
 const CATEGORIES = ['Mango', 'Classic', 'Spicy', 'Digestive', 'Special'];
 
@@ -185,6 +186,7 @@ export default function AdminProductsPage() {
           </div>
 
           <div className="admin-header-actions">
+            <BackButton label="Orders" fallbackHref="/admin" />
             <Link href="/" className="admin-header-link">
               🏪 Storefront
             </Link>

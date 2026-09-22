@@ -6,6 +6,8 @@ Official web storefront and management platform for **Saasu Maa's Food** — han
 
 ## Features
 
+- **Dedicated Category-Wise Food Store (`/products`)**: Standalone store page with department filters (Homemade Achaar, Desi Papad, Chutneys, Hand-Ground Spices, Namkeen), sub-category chips, 250g/500g/1kg size selectors, and upcoming product pre-orders.
+- **Universal Site-Wide Back Navigation**: Intuitive, accessible Back Button component integrated across all secondary routes (`/products`, `/login`, `/signup`, `/account`, `/admin`, `/terms`, `/privacy`, `/refund`, `/shipping`) with automatic fallback routing.
 - **Interactive Product Catalog**: Dynamic size switcher across **250g**, **500g**, and **1kg** variants with real-time price calculations and local basket management.
 - **Dual Authentication (Password & Email OTP)**: Secure login supporting both email OTP and strong password authentication (`crypto.scrypt` hashing with per-user salt and timing-safe verification), with automatic OTP identity verification for OTP-created accounts setting up their first password.
 - **Customer Account Portal**: Dedicated `/account` dashboard displaying member details, order shortcuts, and direct concierge links.
@@ -45,11 +47,16 @@ Official web storefront and management platform for **Saasu Maa's Food** — han
 │   │   ├── account/         # Customer account dashboard
 │   │   ├── admin/           # Admin management console with paginated orders
 │   │   │   └── products/    # Product catalog, prices & Cloudinary photo editor
-│   │   ├── login/           # Email OTP login page
+│   │   ├── login/           # Email OTP & password login page
 │   │   ├── signup/          # Registration page with OTP verification
+│   │   ├── products/        # Dedicated multi-department food store & category filters
+│   │   ├── terms/           # Terms & Conditions compliance page
+│   │   ├── privacy/         # Privacy policy (DPDP Act 2023)
+│   │   ├── refund/          # Refund, return & transit damage policy
+│   │   ├── shipping/        # Shipping & delivery guidelines
 │   │   ├── api/
 │   │   │   ├── admin/       # Admin endpoints (paginated orders, stats, products, upload)
-│   │   │   ├── auth/        # Auth endpoints (send-otp, verify-otp, me, logout)
+│   │   │   ├── auth/        # Auth endpoints (send-otp, verify-otp, me, logout, passwords)
 │   │   │   ├── orders/      # Customer order placement & DB persistence
 │   │   │   └── products/    # Catalog pricing endpoint
 │   │   ├── globals.css      # Design tokens, catalog grid, auth & admin styles
@@ -58,6 +65,8 @@ Official web storefront and management platform for **Saasu Maa's Food** — han
 │   │   ├── robots.js        # Robots.txt generator
 │   │   └── sitemap.js       # Dynamic sitemap generator
 │   ├── components/
+│   │   ├── BackButton.js    # Universal accessible back navigation component
+│   │   ├── LegalLayout.js   # Shared legal compliance layout & tab switcher
 │   │   └── SpiroSpinner.js  # Torus spirograph geometric loading spinner
 │   ├── lib/
 │   │   ├── auth.js          # OTP generation, HMAC hashing, signed cookies

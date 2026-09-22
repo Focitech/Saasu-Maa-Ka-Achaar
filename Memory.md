@@ -9,6 +9,7 @@
 - Admin Product Catalog & Cloudinary Media: `done`
 - WhatsApp Checkout & Order Dispatch: `done`
 - Legal & Compliance Pages (Terms, Privacy, Refund, Shipping): `done`
+- Dedicated Food Store (/products) & Universal Back Navigation: `done`
 
 
 ## Tech Stack & Specifications
@@ -99,7 +100,7 @@
   - Hydration-Safe Mounting: Auth elements gate on `isMounted` state to eliminate SSR/CSR hydration mismatches.
   - High-Contrast Badges: `.nav-admin-btn` uses bold deep royal maroon (`#4A0E17`) and gold borders for 100% sharp readability against light navbar backgrounds.
   - Role-Aware Badges: Navbar dynamically displays `🛡️ Admin Console` for `role === 'admin'`, `👔 Staff` for `role === 'staff'`, or user's first name/account for customers.
-  - Responsive Navbar & Mobile Drawer: Two-tier mobile actions layout with full-width Auth button and 2-column Call & WhatsApp grid; redundant top header auth button hidden on <= 540px to prevent header squashing; scoped `.mobile-nav-link` CSS to prevent font color pollution on WhatsApp button.
+  - Responsive Navbar & Mobile Drawer: Full-width edge-aligned navbar (`max-width: 100%; padding: 6px 28px`) positioning brand logo and Hindi title on the far-left edge; removed redundant contact number badge from top navbar to eliminate crowding (phone shortcuts remain prominent in announcement bar, floating widget, contact section, and mobile drawer). Two-tier mobile actions layout with full-width Auth button and 2-column Call & WhatsApp grid.
   - Circular SVG Logout Button: Modern circular exit icon (`[→`) positioned at the very far-right end of all navbar actions (after Order Online and Admin button), with animated crimson hover transition.
   - Graceful Fallback: In-memory store & console OTP logging active when local env keys are pending.
 - Config / env:
@@ -209,3 +210,24 @@
 - Known issues / TODO: None
 - Last changed: 2026-09-22 — published complete legal compliance suite (Terms, Privacy, Refund, Shipping) with footer integration and sitemap inclusion
 
+## Feature: Dedicated Food Store (/products) & Universal Back Navigation
+- Status: done
+- Purpose: Extensible multi-department food store page with category filters and site-wide back navigation
+- Files:
+  - `src/components/BackButton.js` — universal back button using Next.js `router.back()` with fallback href
+  - `src/app/products/page.js` — dedicated category-wise food store with size selector, cart drawer, direct WhatsApp ordering, and future food department teasers
+  - `src/components/LegalLayout.js` — back button integration for all legal pages (/terms, /privacy, /refund, /shipping)
+  - `src/app/login/page.js`, `src/app/signup/page.js`, `src/app/account/page.js` — back button integration for customer auth
+  - `src/app/admin/page.js`, `src/app/admin/products/page.js` — back button integration for admin portals
+  - `src/app/page.js` — storefront links in desktop navbar, mobile drawer, hero banner CTA, and footer
+  - `src/app/globals.css` — `.universal-back-btn` pill styles and `.products-store-page` responsive grid
+  - `src/app/sitemap.js` — `/products` route indexed with priority 0.9
+- Behavior / key decisions:
+  - Universal Back Navigation: Uses `window.history.length > 1 ? router.back() : router.push(fallbackHref)` ensuring users never get stranded when navigating directly to a deep page.
+  - Extensible Food Departments: 5 top-level department tabs (`🌶️ Homemade Achaar` [Active], `🫓 Desi Papad & Fryums` [Coming Soon], `🍯 Chutneys & Murabba` [Coming Soon], `🌾 Hand-Ground Spices` [Coming Soon], `🍪 Traditional Snacks & Namkeen` [Coming Soon]).
+  - Pickle Sub-Category Chips: In-depth pickle variety filter chips (`All`, `Mango`, `Classic`, `Spicy`, `Digestive`, `Special`) for instant client-side filtering.
+  - Direct WhatsApp Pre-ordering: Upcoming department teasers include "Notify Me on WhatsApp" pre-filled inquiry buttons; product cards include direct WhatsApp order links with size selection.
+  - Full Basket & Cart Drawer: Standalone cart state, item increment/decrement, and WhatsApp order checkout modal identical to home page.
+- Config / env: WhatsApp business phone `918979319003`
+- Known issues / TODO: None
+- Last changed: 2026-09-22 — published dedicated food store (/products) and universal BackButton across all pages
