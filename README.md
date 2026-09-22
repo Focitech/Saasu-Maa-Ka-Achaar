@@ -13,7 +13,7 @@ Official web storefront and management platform for **Saasu Maa's Food** — han
 - **Product Catalog & Pricing Editor**: Dedicated `/admin/products` suite to manage pickle varieties, bilingual Hindi/English names, real-time stock toggles, and dynamic pricing across 250g, 500g, and 1kg sizes.
 - **Cloudinary Image Management**: Automated jar photo uploads directly to Cloudinary with CDN delivery, auto-formatting, and dev base64 fallback.
 - **Official Rate Card & Price List**: Dedicated section displaying the authentic price poster and interactive pricing table.
-- **Direct WhatsApp & Phone Ordering**: One-click pre-filled WhatsApp checkout and direct phone booking (`+91 8979319003`).
+- **Direct WhatsApp & Phone Ordering**: Automatic WhatsApp checkout redirection with complete itemized order breakdown, order reference ID, delivery address, and direct phone booking (`+91 8979319003`).
 - **Comprehensive Local & Regional SEO**: JSON-LD structured data (`LocalBusiness`, `Product`, `BreadcrumbList`), Open Graph, Twitter Cards, automated `sitemap.xml`, and `robots.txt` optimized for Bareilly, Uttar Pradesh, and pan-India discovery.
 
 ---

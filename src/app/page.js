@@ -222,7 +222,19 @@ export default function Home() {
       return;
     }
 
+    if (cart.length === 0) {
+      showToast('Your basket is empty.');
+      return;
+    }
+
     setIsSubmitting(true);
+    let orderRef = `SM-${Date.now().toString().slice(-6)}`;
+
+    // Build readable item breakdown for WhatsApp
+    const itemList = cart
+      .map((i, idx) => `${idx + 1}. ${i.name} (${i.weight}) x ${i.qty} = ₹${i.price * i.qty}`)
+      .join('\n');
+
     try {
       const res = await fetch('/api/orders', {
         method: 'POST',
@@ -237,26 +249,49 @@ export default function Home() {
       });
 
       const result = await res.json();
-      if (result.success) {
-        showToast(`Order Placed! Reference: ${result.orderId}`);
-        setCart([]);
-        setIsCartOpen(false);
-        setCustomerInfo({ name: '', phone: '', address: '' });
-      } else {
-        showToast(result.message || 'Error creating order.');
+      if (result && result.success && result.orderId) {
+        orderRef = result.orderId;
       }
     } catch (err) {
-      showToast('Network error submitting order.');
-    } finally {
-      setIsSubmitting(false);
+      console.warn('Backend order sync fallback:', err);
     }
+
+    // Build complete WhatsApp message with all order & delivery details
+    const msg =
+      `Namaste Saasu Maa's Food! 🙏\n\n` +
+      `I have placed an order on the website:\n\n` +
+      `📋 *Order ID:* ${orderRef}\n` +
+      `👤 *Name:* ${customerInfo.name}\n` +
+      `📱 *Phone:* ${customerInfo.phone}\n` +
+      `📍 *Delivery Address:* ${customerInfo.address || 'Bareilly'}\n\n` +
+      `🛒 *Items:*\n${itemList}\n\n` +
+      `💰 *Total Amount:* ₹${totalAmount}\n\n` +
+      `Please confirm my order and share payment / delivery details.`;
+
+    const waUrl = `https://wa.me/918979319003?text=${encodeURIComponent(msg)}`;
+
+    showToast(`Order Placed (${orderRef})! Opening WhatsApp...`);
+    setCart([]);
+    setIsCartOpen(false);
+    setCustomerInfo({ name: '', phone: '', address: '' });
+    setIsSubmitting(false);
+
+    // Reliable redirect: triggers WhatsApp app on mobile or WhatsApp Web on desktop
+    window.location.href = waUrl;
   };
 
   const openWhatsAppOrder = () => {
     if (cart.length === 0) return;
-    const itemList = cart.map(i => `${i.name} (${i.weight}) x ${i.qty} = ₹${i.price * i.qty}`).join('%0A');
-    const msg = `Namaste Saasu Maa's Food!%0AI would like to order the following pickles:%0A${itemList}%0A%0ATotal: ₹${totalAmount}%0A%0APlease confirm the payment and delivery details.`;
-    window.open(`https://wa.me/918979319003?text=${msg}`, '_blank');
+    const itemList = cart
+      .map((i, idx) => `${idx + 1}. ${i.name} (${i.weight}) x ${i.qty} = ₹${i.price * i.qty}`)
+      .join('\n');
+    const msg =
+      `Namaste Saasu Maa's Food! 🙏\n\n` +
+      `I would like to order the following pickles:\n\n` +
+      `🛒 *Items:*\n${itemList}\n\n` +
+      `💰 *Total Amount:* ₹${totalAmount}\n\n` +
+      `Please confirm the order and delivery details.`;
+    window.location.href = `https://wa.me/918979319003?text=${encodeURIComponent(msg)}`;
   };
 
   return (
@@ -1168,7 +1203,7 @@ export default function Home() {
                     style={{ width: '100%', justifyContent: 'center', marginTop: '8px' }}
                     disabled={isSubmitting}
                   >
-                    {isSubmitting ? 'Submitting Order...' : 'Confirm Delivery Inquiry'}
+                    {isSubmitting ? 'Placing Order & Opening WhatsApp...' : 'Confirm Order on WhatsApp 💬'}
                   </button>
                 </form>
               </>

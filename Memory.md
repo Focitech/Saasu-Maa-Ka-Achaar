@@ -7,6 +7,7 @@
 - Password Auth (scrypt, strength validation, sanitization): `done`
 - Admin Management Console & Paginated Orders: `done`
 - Admin Product Catalog & Cloudinary Media: `done`
+- WhatsApp Checkout & Order Dispatch: `done`
 
 
 ## Tech Stack & Specifications
@@ -169,4 +170,17 @@
   - `CLOUDINARY_API_SECRET`: Cloudinary API secret
 - Known issues / TODO: None
 - Last changed: 2026-09-21 — created admin product catalog management page and Cloudinary photo uploader
+
+## Feature: WhatsApp Checkout & Order Dispatch
+- Status: done
+- Purpose: Save order to Supabase and immediately redirect customer to WhatsApp with full order details prefilled
+- Files: `src/app/page.js`, `src/app/api/orders/route.js`
+- Behavior / key decisions:
+  - Atomic Order Sync: When user clicks "Confirm Order on WhatsApp", `handleOrderSubmit` first posts order payload to `/api/orders` (recording it in Supabase for the Admin Console).
+  - WhatsApp Deep Link: Pre-formats a structured WhatsApp message including Order ID (`SM-XXXXXX`), Customer Name, Phone, Delivery Address, Itemized pickle list with sizes/weights, and Total Amount.
+  - Popup Blocker Safe: Uses `window.location.href = waUrl` with `encodeURIComponent` instead of `window.open` to ensure seamless opening of WhatsApp native app on Android/iOS without browser popup blocks.
+  - Offline Fallback: If network error occurs during `/api/orders` post, client still executes WhatsApp redirection with local cart details so no customer order is lost.
+- Config / env: WhatsApp business number `918979319003`
+- Known issues / TODO: None
+- Last changed: 2026-09-22 — added automatic WhatsApp redirection with prefilled order details on order confirmation
 
